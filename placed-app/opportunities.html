@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opportunities & Drives – PLACED Placement System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-wrap">
+          <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="#fff"/></svg></div>
+          <span class="logo-text">PLACED</span>
+        </a>
+        <button class="sidebar-toggle" id="sidebarToggle"><i data-lucide="panel-left-close" size="18"></i></button>
+      </div>
+
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun&backgroundColor=b6e3f4" alt="Arjun"/><span class="online-dot"></span></div>
+        <div class="sidebar-profile-info"><p class="sidebar-name">Arjun Sharma</p><p class="sidebar-roll">CS | 2024 Batch</p></div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="nav-section-label">Core Track</p>
+        <ul>
+          <li class="nav-item"><a href="index.html"><span class="nav-icon"><i data-lucide="layout-dashboard" size="18"></i></span><span class="nav-label">Dashboard</span></a></li>
+          <li class="nav-item"><a href="readiness.html"><span class="nav-icon"><i data-lucide="gauge" size="18"></i></span><span class="nav-label">Career Readiness</span><span class="nav-count new">72%</span></a></li>
+          <li class="nav-item"><a href="assessments.html"><span class="nav-icon"><i data-lucide="clipboard-check" size="18"></i></span><span class="nav-label">Assessments</span><span class="nav-count">3</span></a></li>
+          <li class="nav-item"><a href="improvement.html"><span class="nav-icon"><i data-lucide="compass" size="18"></i></span><span class="nav-label">Improvement Path</span></a></li>
+          <li class="nav-item"><a href="simulations.html"><span class="nav-icon"><i data-lucide="cpu" size="18"></i></span><span class="nav-label">Practice & Simulations</span></a></li>
+        </ul>
+
+        <p class="nav-section-label">Tools & Drives</p>
+        <ul>
+          <li class="nav-item"><a href="resume.html"><span class="nav-icon"><i data-lucide="file-badge" size="18"></i></span><span class="nav-label">Resume Maker & Analyzer</span><span class="nav-count new">ATS 70%</span></a></li>
+          <li class="nav-item active"><a href="opportunities.html"><span class="nav-icon"><i data-lucide="briefcase" size="18"></i></span><span class="nav-label">Opportunities / Drives</span><span class="nav-count">12</span></a></li>
+          <li class="nav-item"><a href="interviews.html"><span class="nav-icon"><i data-lucide="video" size="18"></i></span><span class="nav-label">Interviews</span><span class="nav-count new">2</span></a></li>
+        </ul>
+
+        <p class="nav-section-label">Account</p>
+        <ul>
+          <li class="nav-item"><a href="profile.html"><span class="nav-icon"><i data-lucide="user-cog" size="18"></i></span><span class="nav-label">Profile & Settings</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="placement-badge-mini"><i data-lucide="award" size="14"></i><span>Readiness Score: 72/100</span></div>
+        <a href="profile.html" class="logout-btn"><i data-lucide="log-out" size="16"></i><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-menu-btn" id="menuBtn"><i data-lucide="menu" size="20"></i></button>
+          <div class="topbar-brand">
+            <div class="brand-logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="#fff"/></svg></div>
+            <span class="brand-logo-text">PLACED</span>
+            <span class="track-badge">Student Track</span>
+          </div>
+          <div class="search-wrap">
+            <i data-lucide="search" size="16" class="search-icon"></i>
+            <input type="text" class="global-search" id="globalSearch" placeholder="Search opportunities & companies..." />
+            <kbd class="search-kbd">⌘K</kbd>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" id="notifBtn"><i data-lucide="bell" size="20"></i><span class="topbar-badge">3</span></button>
+          <div class="topbar-profile" id="profileDropdownTrigger"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun&backgroundColor=b6e3f4" alt="Arjun" class="topbar-avatar" /></div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="view-header">
+          <div>
+            <h1 class="view-title"><i data-lucide="briefcase" size="24"></i> Job Opportunities & Campus Placement Drives</h1>
+            <p class="view-sub">Explore active corporate recruitment drives matched to your eligibility profile.</p>
+          </div>
+        </div>
+
+        <div class="job-cards-grid">
+          <div class="job-card">
+            <div class="jc-top">
+              <div class="jc-logo-wrap"><img src="https://logo.clearbit.com/google.com" alt="Google" onerror="this.src='https://ui-avatars.com/api/?name=G&background=4285F4&color=fff&size=40'" class="jc-logo"/></div>
+              <button class="jc-save" aria-label="Save job"><i data-lucide="bookmark" size="16"></i></button>
+            </div>
+            <p class="jc-company">Google</p>
+            <h4 class="jc-role">Software Engineer Intern</h4>
+            <div class="jc-tags"><span class="tag blue">Full-time</span><span class="tag green">Remote</span></div>
+            <div class="jc-meta"><span><i data-lucide="map-pin" size="12"></i> Bangalore, IN</span><span><i data-lucide="indian-rupee" size="12"></i> ₹18–22 LPA</span></div>
+            <div class="jc-footer"><span class="jc-match">94% match</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+
+          <div class="job-card">
+            <div class="jc-top">
+              <div class="jc-logo-wrap"><img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" onerror="this.src='https://ui-avatars.com/api/?name=M&background=0078D4&color=fff&size=40'" class="jc-logo"/></div>
+              <button class="jc-save" aria-label="Save job"><i data-lucide="bookmark" size="16"></i></button>
+            </div>
+            <p class="jc-company">Microsoft</p>
+            <h4 class="jc-role">Cloud Solutions Engineer</h4>
+            <div class="jc-tags"><span class="tag blue">Full-time</span><span class="tag purple">Hybrid</span></div>
+            <div class="jc-meta"><span><i data-lucide="map-pin" size="12"></i> Hyderabad, IN</span><span><i data-lucide="indian-rupee" size="12"></i> ₹20–28 LPA</span></div>
+            <div class="jc-footer"><span class="jc-match">89% match</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+
+          <div class="job-card">
+            <div class="jc-top">
+              <div class="jc-logo-wrap"><img src="https://logo.clearbit.com/nvidia.com" alt="NVIDIA" onerror="this.src='https://ui-avatars.com/api/?name=N&background=76B900&color=fff&size=40'" class="jc-logo"/></div>
+              <button class="jc-save" aria-label="Save job"><i data-lucide="bookmark" size="16"></i></button>
+            </div>
+            <p class="jc-company">NVIDIA</p>
+            <h4 class="jc-role">Machine Learning Engineer</h4>
+            <div class="jc-tags"><span class="tag green">Remote</span><span class="tag amber">Hot 🔥</span></div>
+            <div class="jc-meta"><span><i data-lucide="map-pin" size="12"></i> Pune, IN</span><span><i data-lucide="indian-rupee" size="12"></i> ₹25–32 LPA</span></div>
+            <div class="jc-footer"><span class="jc-match">82% match</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+
+          <div class="job-card">
+            <div class="jc-top">
+              <div class="jc-logo-wrap"><img src="https://logo.clearbit.com/adobe.com" alt="Adobe" onerror="this.src='https://ui-avatars.com/api/?name=Ad&background=FF0000&color=fff&size=40'" class="jc-logo"/></div>
+              <button class="jc-save" aria-label="Save job"><i data-lucide="bookmark" size="16"></i></button>
+            </div>
+            <p class="jc-company">Adobe</p>
+            <h4 class="jc-role">Frontend Developer</h4>
+            <div class="jc-tags"><span class="tag blue">Full-time</span><span class="tag purple">Hybrid</span></div>
+            <div class="jc-meta"><span><i data-lucide="map-pin" size="12"></i> Noida, IN</span><span><i data-lucide="indian-rupee" size="12"></i> ₹15–20 LPA</span></div>
+            <div class="jc-footer"><span class="jc-match">78% match</span><button class="btn btn-primary btn-sm">Apply Now</button></div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

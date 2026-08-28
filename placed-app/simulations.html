@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice & Simulations – PLACED Placement System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo-wrap">
+          <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="#fff"/></svg></div>
+          <span class="logo-text">PLACED</span>
+        </a>
+        <button class="sidebar-toggle" id="sidebarToggle"><i data-lucide="panel-left-close" size="18"></i></button>
+      </div>
+
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun&backgroundColor=b6e3f4" alt="Arjun"/><span class="online-dot"></span></div>
+        <div class="sidebar-profile-info"><p class="sidebar-name">Arjun Sharma</p><p class="sidebar-roll">CS | 2024 Batch</p></div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="nav-section-label">Core Track</p>
+        <ul>
+          <li class="nav-item"><a href="index.html"><span class="nav-icon"><i data-lucide="layout-dashboard" size="18"></i></span><span class="nav-label">Dashboard</span></a></li>
+          <li class="nav-item"><a href="readiness.html"><span class="nav-icon"><i data-lucide="gauge" size="18"></i></span><span class="nav-label">Career Readiness</span><span class="nav-count new">72%</span></a></li>
+          <li class="nav-item"><a href="assessments.html"><span class="nav-icon"><i data-lucide="clipboard-check" size="18"></i></span><span class="nav-label">Assessments</span><span class="nav-count">3</span></a></li>
+          <li class="nav-item"><a href="improvement.html"><span class="nav-icon"><i data-lucide="compass" size="18"></i></span><span class="nav-label">Improvement Path</span></a></li>
+          <li class="nav-item active"><a href="simulations.html"><span class="nav-icon"><i data-lucide="cpu" size="18"></i></span><span class="nav-label">Practice & Simulations</span></a></li>
+        </ul>
+
+        <p class="nav-section-label">Tools & Drives</p>
+        <ul>
+          <li class="nav-item"><a href="resume.html"><span class="nav-icon"><i data-lucide="file-badge" size="18"></i></span><span class="nav-label">Resume Maker & Analyzer</span><span class="nav-count new">ATS 70%</span></a></li>
+          <li class="nav-item"><a href="opportunities.html"><span class="nav-icon"><i data-lucide="briefcase" size="18"></i></span><span class="nav-label">Opportunities / Drives</span><span class="nav-count">12</span></a></li>
+          <li class="nav-item"><a href="interviews.html"><span class="nav-icon"><i data-lucide="video" size="18"></i></span><span class="nav-label">Interviews</span><span class="nav-count new">2</span></a></li>
+        </ul>
+
+        <p class="nav-section-label">Account</p>
+        <ul>
+          <li class="nav-item"><a href="profile.html"><span class="nav-icon"><i data-lucide="user-cog" size="18"></i></span><span class="nav-label">Profile & Settings</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="placement-badge-mini"><i data-lucide="award" size="14"></i><span>Readiness Score: 72/100</span></div>
+        <a href="profile.html" class="logout-btn"><i data-lucide="log-out" size="16"></i><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="topbar-menu-btn" id="menuBtn"><i data-lucide="menu" size="20"></i></button>
+          <div class="topbar-brand">
+            <div class="brand-logo-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="#fff"/></svg></div>
+            <span class="brand-logo-text">PLACED</span>
+            <span class="track-badge">Student Track</span>
+          </div>
+          <div class="search-wrap">
+            <i data-lucide="search" size="16" class="search-icon"></i>
+            <input type="text" class="global-search" id="globalSearch" placeholder="Search simulations..." />
+            <kbd class="search-kbd">⌘K</kbd>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="topbar-icon-btn" id="notifBtn"><i data-lucide="bell" size="20"></i><span class="topbar-badge">3</span></button>
+          <div class="topbar-profile" id="profileDropdownTrigger"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun&backgroundColor=b6e3f4" alt="Arjun" class="topbar-avatar" /></div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <div class="view-header">
+          <div>
+            <h1 class="view-title"><i data-lucide="cpu" size="24"></i> Practice & Multi-Stage Recruitment Simulations</h1>
+            <p class="view-sub">Experience full multi-stage recruitment drives: Aptitude → Technical → Coding → HR Interview.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header"><h2 class="card-title">Active Simulation Environment</h2></div>
+          <div class="simulations-grid">
+            <div class="sim-card active">
+              <div class="sim-header"><span class="sim-badge">Active Trial</span><span class="sim-time">Stage 2 of 4</span></div>
+              <h4 class="sim-title">TCS Digital & NQT Standard Hiring Simulation</h4>
+              <p class="sim-sub">Round 2: Technical Computer Science Core & DBMS</p>
+              <div class="sim-pipeline">
+                <span class="pipeline-step done">Aptitude ✓</span>
+                <span class="pipeline-step active">Technical</span>
+                <span class="pipeline-step">Coding</span>
+                <span class="pipeline-step">Mock HR</span>
+              </div>
+              <div class="sim-footer">
+                <span class="sim-score">Aptitude Score: 86%</span>
+                <button class="btn btn-primary btn-sm">Enter Technical Round</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
