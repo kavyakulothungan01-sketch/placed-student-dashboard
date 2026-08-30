@@ -109,7 +109,7 @@ const Profile = () => {
             <label>Batch Passing Year</label>
             <input type="text" name="batchYear" value={profile.batchYear} onChange={handleChange} className="form-input" placeholder="e.g. 2025" />
           </div>
-          <div className="form-group">
+          <div className="form-group" style={{ gridColumn: 'span 2' }}>
             <label>Active Backlogs</label>
             <input type="text" name="backlogs" value={profile.backlogs} onChange={handleChange} className="form-input" placeholder="e.g. 0 (Eligible)" />
           </div>

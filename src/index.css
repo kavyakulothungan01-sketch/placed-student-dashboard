@@ -642,11 +642,13 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 24px;
+  padding-bottom: 40px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   position: relative;
   z-index: 2;
+  min-height: 0;
 }
 
 
@@ -2509,6 +2511,17 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-content {
+    padding: 16px;
+    padding-bottom: 40px;
+  }
 }
 
 .form-group {
