@@ -55,22 +55,7 @@ export const studentService = {
 
       if (!error && created) return created;
     }
-
-    // Fallback query for current student in database
-    const { data: list } = await supabase.from('students').select('*').limit(1);
-    if (list && list.length > 0) {
-      return list[0];
-    }
-
-    // If table is completely empty, insert a clean baseline student record into database
-    const baseline = {
-      full_name: 'Student User',
-      email: 'student@college.edu',
-      title: 'Student',
-      avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Student&backgroundColor=b6e3f4'
-    };
-    const { data: inserted } = await supabase.from('students').insert(baseline).select().single();
-    return inserted || null;
+    return null;
   },
 
   /**
@@ -128,8 +113,7 @@ export const studentService = {
           backlogs: merged.backlogs,
           linkedin: merged.linkedin,
           github: merged.github,
-          avatar_url: merged.avatarUrl,
-          updated_at: new Date().toISOString()
+          avatar_url: merged.avatarUrl
         };
 
         if (current.id) {

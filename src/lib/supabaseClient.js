@@ -1,16 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-const getEnvVar = (key, fallback) => {
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
-    return import.meta.env[key];
-  }
-  if (typeof process !== 'undefined' && process.env && process.env[key]) {
-    return process.env[key];
-  }
-  return fallback;
-};
-
-const supabaseUrl = getEnvVar('VITE_SUPABASE_URL', 'https://fslpzikstscutxfrnxst.supabase.co');
-const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzbHB6aWtzdHNjdXR4ZnJueHN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2Mjk5MjIsImV4cCI6MjA5MzIwNTkyMn0.4LxkYIJJU-sHX3FFzAlZQpd5EsQgH1Qmp1pSyzmDG7w');
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

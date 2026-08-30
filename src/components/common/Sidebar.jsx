@@ -61,39 +61,44 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      <div className="sidebar-header">
-        <NavLink to="/" className="logo-wrap">
-          <svg
-            className="sidebar-logo-img"
-            viewBox="0 0 148 44"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="placed"
-          >
-            <text
-              x="6"
-              y="28"
-              fontFamily="'Inter', 'Segoe UI', system-ui, sans-serif"
-              fontSize="24"
-              fontWeight="800"
-              letterSpacing="-0.5"
-              fill="#111827"
-            >placed</text>
-          </svg>
+      <div className="sidebar-header" style={{ height: '80px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', flexShrink: 0 }}>
+        <NavLink to="/" className="logo-wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', textDecoration: 'none', flex: 1, minWidth: 0 }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            backgroundColor: '#FFFFFF',
+            padding: '4px',
+            flexShrink: 0,
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #E2E8F0',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <img 
+              src="/placeduplogo.jpg" 
+              alt="Placed Logo" 
+              onError={(e) => { e.target.src = '/placed-logo.png'; }}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+            />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1, minWidth: 0 }}>
+            <span style={{ fontWeight: 700, fontSize: '14px', color: '#FFFFFF', letterSpacing: '-0.025em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {student?.name || "Student Profile"}
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#34D399', flexShrink: 0 }}></span>
+              <span style={{ fontSize: '10px', color: '#94A3B8', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {student?.degree ? student.degree.slice(0, 15) : 'Student'} | {student?.batchYear ? `Batch '${student.batchYear.slice(-2)}` : 'Active'}
+              </span>
+            </div>
+          </div>
         </NavLink>
-        <button className="sidebar-toggle" onClick={() => setCollapsed(!collapsed)}>
+        <button className="sidebar-toggle" onClick={() => setCollapsed(!collapsed)} style={{ flexShrink: 0 }}>
           {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
         </button>
-      </div>
-
-      <div className="sidebar-profile">
-        <div className="sidebar-avatar">
-          <img src={student?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=Student&backgroundColor=b6e3f4"} alt={student?.name || "Student"} />
-          <span className="online-dot"></span>
-        </div>
-        <div className="sidebar-profile-info">
-          <p className="sidebar-name">{student?.name || "Student Profile"}</p>
-          <p className="sidebar-roll">{student?.degree ? student.degree.slice(0, 15) : 'Student'} | {student?.batchYear ? `Batch '${student.batchYear.slice(-2)}` : 'Active'}</p>
-        </div>
       </div>
 
       <nav className="sidebar-nav">
