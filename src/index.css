@@ -117,6 +117,35 @@ body {
   pointer-events: none;
 }
 
+/* ── PLACED Logo – Dark Mode / Forced Theme Protection ──
+   Prevents Android Chrome, Safari, and any browser from auto-inverting
+   or recoloring the sidebar logo image regardless of OS/browser theme.
+   The logo must always display with its original colors (white bg, dark wordmark). */
+.sidebar-logo-container {
+  color-scheme: light;
+  forced-color-adjust: none;
+}
+
+.sidebar-logo-fixed {
+  color-scheme: light;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  forced-color-adjust: none;
+  -webkit-filter: none !important;
+}
+
+/* Explicitly cancel any forced dark mode image inversion */
+@media (prefers-color-scheme: dark) {
+  .sidebar-logo-container {
+    background-color: #FFFFFF !important;
+  }
+  .sidebar-logo-fixed {
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+}
+
+
 .sidebar-toggle {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.08);

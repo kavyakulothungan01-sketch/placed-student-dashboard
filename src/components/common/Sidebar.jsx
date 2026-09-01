@@ -63,7 +63,7 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-header" style={{ height: '80px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', flexShrink: 0 }}>
         <NavLink to="/" className="logo-wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', textDecoration: 'none', flex: 1, minWidth: 0 }} onClick={onMobileClose}>
-          <div style={{
+          <div className="sidebar-logo-container" style={{
             width: '40px',
             height: '40px',
             borderRadius: '12px',
@@ -75,12 +75,14 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            colorScheme: 'light'
           }}>
             <img 
               src="/placeduplogo.jpg" 
               alt="Placed Logo" 
               loading="eager"
+              className="sidebar-logo-fixed"
               style={{ width: '100%', height: '100%', objectFit: 'contain', colorScheme: 'light' }} 
             />
           </div>
