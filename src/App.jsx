@@ -17,12 +17,25 @@ import PlacedWatermark from './components/common/PlacedWatermark';
 
 const AppLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
     <div className="app-shell">
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+      {/* Mobile sidebar overlay backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          className="mobile-sidebar-overlay"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        mobileSidebarOpen={mobileSidebarOpen}
+        onMobileClose={() => setMobileSidebarOpen(false)}
+      />
       <div className="main-area">
-        <Topbar />
+        <Topbar onMenuClick={() => setMobileSidebarOpen(prev => !prev)} />
         {/* PLACED brand watermark – pure SVG wordmark background layer */}
         <PlacedWatermark />
         {children}

@@ -58,7 +58,7 @@ const MainDashboard = () => {
               : 'Record your skill scores in the Readiness Dashboard to compute your Placement Readiness Score.'}
           </p>
           <div className="welcome-actions">
-            <Link to="/readiness" className="btn btn-primary"><Gauge size={16} style={{ marginRight: '6px' }} /> View Readiness Analysis</Link>
+            <Link to="/readiness" className="btn btn-ghost"><Gauge size={16} style={{ marginRight: '6px' }} /> View Readiness Analysis</Link>
             <Link to="/resume" className="btn btn-ghost"><FileBadge size={16} style={{ marginRight: '6px' }} /> Open Resume Maker</Link>
             <Link to="/profile" className="btn btn-ghost"><UserCheck size={16} style={{ marginRight: '6px' }} /> Edit Profile</Link>
           </div>

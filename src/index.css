@@ -403,6 +403,11 @@ body {
   color: var(--text);
 }
 
+/* Mobile hamburger button: hidden on desktop, shown by media query on mobile */
+.mobile-menu-btn {
+  display: none;
+}
+
 .search-wrap {
   position: relative;
   display: flex;
@@ -1979,23 +1984,352 @@ body {
 /* =============================================
    RESPONSIVE TWEAKS
    ============================================= */
+
+/* ── 1400px: Large desktops ── */
 @media (max-width: 1400px) {
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .qa-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
+/* ── 1100px: Laptops / Small Desktops ── */
 @media (max-width: 1100px) {
   .main-grid { grid-template-columns: 1fr; }
-  .job-cards-grid { grid-template-columns: 1fr; }
+  .job-cards-grid { grid-template-columns: repeat(2, 1fr); }
   .tracker-board { grid-template-columns: repeat(3, 1fr); }
+  .role-fit-container { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ── 900px: Landscape tablets ── */
+@media (max-width: 900px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  /* Reset span-2 items on single-column form grid */
+  .form-group-full {
+    grid-column: 1 !important;
+  }
+  .dashboard-content {
+    padding: 16px;
+    padding-bottom: 40px;
+  }
+  .resume-builder-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 800px: Tablets / Mobile landscape ── */
 @media (max-width: 800px) {
-  .sidebar { display: none; }
+  /* Sidebar: hide on desktop, show as overlay on mobile */
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    z-index: 400;
+    transition: left var(--transition-slow);
+    width: var(--sidebar-w) !important;
+  }
+
+  .sidebar.mobile-open {
+    left: 0;
+  }
+
+  /* Mobile overlay backdrop */
+  .mobile-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 399;
+    backdrop-filter: blur(2px);
+  }
+
+  /* On mobile, keep sidebar nav labels always visible (not collapsed) */
+  .sidebar.collapsed .nav-label,
+  .sidebar.mobile-open .nav-label { opacity: 1; pointer-events: auto; }
+  .sidebar.collapsed .nav-count,
+  .sidebar.mobile-open .nav-count { opacity: 1; pointer-events: auto; }
+  .sidebar.collapsed .nav-section-label,
+  .sidebar.mobile-open .nav-section-label { opacity: 1; }
+  .sidebar.collapsed .sidebar-profile-info { opacity: 1; pointer-events: auto; }
+  .sidebar.collapsed .placement-badge-mini { opacity: 1; pointer-events: auto; }
+  .sidebar.collapsed .logout-btn span { opacity: 1; }
+  .sidebar.collapsed .sidebar-logo-img { opacity: 1; width: auto; pointer-events: auto; }
+
+  /* Show hamburger button on mobile */
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+
+  /* Watermark repositioned since sidebar is hidden */
+  .watermark-container {
+    left: 0 !important;
+  }
+
+  /* KPI Grid */
   .kpi-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Quick Actions */
   .qa-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Welcome visual hidden on small tablets */
   .welcome-visual { display: none; }
-  .dashboard-content { padding: 16px; }
+
+  /* Dashboard content */
+  .dashboard-content { padding: 14px; gap: 16px; }
+
+  /* Job cards */
+  .job-cards-grid { grid-template-columns: 1fr; }
+
+  /* Tracker board */
+  .tracker-board { grid-template-columns: repeat(2, 1fr); overflow-x: auto; }
+
+  /* Role fit */
+  .role-fit-container { grid-template-columns: 1fr; }
+
+  /* View header: stack vertically on mobile */
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .view-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .view-title {
+    font-size: 18px;
+  }
+
+  /* Topbar: reduce padding */
+  .topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  /* Topbar profile info: hide name/role text on mobile */
+  .topbar-profile-info--desktop {
+    display: none;
+  }
+
+  /* Topbar search: allow it to shrink more */
+  .search-wrap {
+    max-width: none;
+    flex: 1;
+  }
+
+  /* Topbar right: tighten gap */
+  .topbar-right { gap: 4px; }
+
+  /* Topbar divider: hide on mobile */
+  .topbar-divider { display: none; }
+
+  /* Interviews timeline: prevent overflow */
+  .interview-item {
+    grid-template-columns: 60px 28px 1fr;
+    gap: 0 8px;
+  }
+
+  /* Simulations grid: 1 column on mobile */
+  .simulations-grid { grid-template-columns: 1fr; }
+}
+
+/* ── 640px: Small tablets / Large phones ── */
+@media (max-width: 640px) {
+  /* KPI grid: 1 column on very small */
+  .kpi-grid { grid-template-columns: 1fr; }
+
+  /* QA grid: 2 cols */
+  .qa-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Welcome banner: reduce padding */
+  .welcome-banner {
+    padding: 24px 20px;
+  }
+  .welcome-heading { font-size: 20px; }
+  .welcome-actions { flex-direction: column; gap: 8px; }
+  .welcome-actions .btn { width: 100%; justify-content: center; }
+
+  /* Cards: reduce padding */
+  .card-header { padding: 14px 16px 10px; }
+
+  /* ATS footer: stack on small */
+  .ats-audit-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .ats-score-box {
+    border-right: none;
+    padding-right: 0;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 12px;
+    width: 100%;
+  }
+
+  /* Resume builder: make form sections single-column */
+  .builder-form-body {
+    max-height: none;
+    padding: 16px;
+  }
+  .resume-paper-wrapper {
+    max-height: none;
+    padding: 12px;
+  }
+
+  /* Gap items: stack vertically */
+  .gap-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* Topbar: reduce search placeholder text on tiny screens */
+  .global-search {
+    font-size: 13px;
+    padding: 9px 32px 9px 34px;
+  }
+
+  /* Interview timeline grid: tighten */
+  .interview-item {
+    grid-template-columns: 52px 24px 1fr;
+    gap: 0 6px;
+    min-height: 100px;
+  }
+
+  /* Profile: stack header */
+  .view-header .btn { width: 100%; justify-content: center; }
+}
+
+/* ── 480px: Mobile phones (standard) ── */
+@media (max-width: 480px) {
+  :root {
+    --topbar-h: 58px;
+  }
+
+  html { font-size: 13px; }
+
+  .dashboard-content {
+    padding: 12px;
+    gap: 14px;
+  }
+
+  /* KPI grid stays at 1 col */
+  .kpi-grid { grid-template-columns: 1fr; }
+
+  /* QA grid: 2 cols, smaller */
+  .qa-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .qa-card { padding: 14px 10px; }
+  .qa-icon { width: 44px; height: 44px; }
+
+  /* Welcome banner */
+  .welcome-banner { padding: 20px 16px; border-radius: var(--radius-lg); }
+  .welcome-heading { font-size: 18px; }
+  .welcome-greeting { font-size: 13px; }
+  .welcome-sub { font-size: 13px; }
+
+  /* KPI cards */
+  .kpi-card { padding: 16px; }
+  .kpi-value { font-size: 22px; }
+
+  /* Topbar */
+  .topbar { height: var(--topbar-h); padding: 0 10px; }
+  .global-search { padding: 8px 30px 8px 32px; font-size: 12.5px; }
+  .search-icon { left: 10px; }
+
+  /* Topbar icons: smaller */
+  .topbar-icon-btn { padding: 6px; }
+  .topbar-avatar { width: 30px; height: 30px; }
+
+  /* Card headings */
+  .card-title { font-size: 13px; }
+  .view-title { font-size: 17px; }
+
+  /* Simulations / Assessments grid */
+  .simulations-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  /* Job cards grid */
+  .job-cards-grid { padding: 12px; gap: 12px; }
+  .job-card { padding: 14px; }
+
+  /* Tracker board: horizontal scroll on mobile */
+  .tracker-board {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    overflow-x: auto;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  /* Role fit: 1 col */
+  .role-fit-container { grid-template-columns: 1fr; padding: 12px; gap: 10px; }
+
+  /* Interview item */
+  .interview-item {
+    grid-template-columns: 48px 22px 1fr;
+    gap: 0 6px;
+    min-height: 90px;
+  }
+  .it-day { font-size: 11px; }
+  .it-time { font-size: 10px; }
+
+  /* Roadmap steps */
+  .roadmap-step { gap: 10px; }
+
+  /* Skill performance */
+  .sp-card { padding: 10px 12px; }
+}
+
+/* ── 375px: Small mobile phones ── */
+@media (max-width: 375px) {
+  html { font-size: 12.5px; }
+
+  .dashboard-content { padding: 10px; gap: 12px; }
+
+  .welcome-banner { padding: 16px 14px; }
+  .welcome-heading { font-size: 16px; }
+
+  .qa-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .qa-card { padding: 12px 8px; gap: 6px; }
+  .qa-label { font-size: 11.5px; }
+  .qa-sub { font-size: 10px; }
+
+  .kpi-value { font-size: 20px; }
+  .kpi-card { padding: 14px; }
+
+  .topbar { padding: 0 8px; }
+  .topbar-icon-btn { padding: 5px; }
+
+  /* Tracker: make columns even smaller */
+  .tracker-board { grid-template-columns: repeat(2, minmax(100px, 1fr)); gap: 6px; padding: 10px; }
+  .tracker-col { min-width: 100px; }
+
+  /* Skill performance grid */
+  .skill-performance-grid { padding: 12px; gap: 10px; }
+
+  /* Gaps list */
+  .gaps-list { padding: 10px 12px; }
+
+  /* Roadmap */
+  .roadmap-steps { padding: 12px; gap: 12px; }
+}
+
+/* ── 320px: Very small phones ── */
+@media (max-width: 320px) {
+  html { font-size: 12px; }
+
+  .dashboard-content { padding: 8px; gap: 10px; }
+  .welcome-banner { padding: 14px 12px; border-radius: var(--radius); }
+  .welcome-heading { font-size: 15px; }
+
+  .qa-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .qa-card { padding: 10px 6px; }
+
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 18px; }
+
+  .topbar { padding: 0 6px; gap: 4px; }
+
+  /* On very tiny screens, hide bell badge text if overflows */
+  .topbar-badge { min-width: 14px; height: 14px; font-size: 9px; }
 }
 
 /* =============================================
@@ -2727,4 +3061,28 @@ body {
   height: 100%;
   object-fit: cover;
   opacity: 0.06;
+}
+
+/* =============================================
+   MOBILE RESPONSIVENESS SPECIFIC OVERRIDES
+   These are placed at the end of the file to ensure they correctly 
+   override base definitions that appeared later in the CSS.
+   ============================================= */
+
+@media (max-width: 1100px) {
+  .role-fit-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .resume-builder-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .role-fit-container {
+    grid-template-columns: 1fr;
+  }
 }

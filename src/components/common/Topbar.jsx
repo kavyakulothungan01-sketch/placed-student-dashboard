@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, Settings, X, ArrowRight, LayoutDashboard, Gauge, ClipboardCheck, Compass, Cpu, Tv, BookOpen, FileBadge, Briefcase, Video, UserCog } from 'lucide-react';
+import { Search, Bell, Settings, X, ArrowRight, LayoutDashboard, Gauge, ClipboardCheck, Compass, Cpu, Tv, BookOpen, FileBadge, Briefcase, Video, UserCog, Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { studentService } from '../../services/studentService';
 import { opportunityService } from '../../services/opportunityService';
 import { classService } from '../../services/classService';
 import { studyModuleService } from '../../services/studyModuleService';
 
-const Topbar = () => {
+const Topbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const [student, setStudent] = useState(null);
   const [query, setQuery] = useState('');
@@ -114,6 +114,14 @@ const Topbar = () => {
   return (
     <header className="topbar">
       <div className="topbar-left">
+        {/* Hamburger button — visible only on mobile via CSS */}
+        <button
+          className="topbar-menu-btn mobile-menu-btn"
+          onClick={onMenuClick}
+          aria-label="Open navigation menu"
+        >
+          <Menu size={22} />
+        </button>
         <div className="search-wrap" ref={searchWrapRef} style={{ position: 'relative' }}>
           <Search size={16} className="search-icon" />
           <input 
@@ -255,7 +263,7 @@ const Topbar = () => {
         <div className="topbar-divider"></div>
         <div className="topbar-profile" id="profileDropdownTrigger" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
           <img src={student?.avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=Student&backgroundColor=b6e3f4"} alt={student?.name || "Student"} className="topbar-avatar" />
-          <div className="topbar-profile-info">
+          <div className="topbar-profile-info topbar-profile-info--desktop">
             <span className="topbar-name">{student?.name || "Student Profile"}</span>
             <span className="topbar-role">{student?.batchYear ? `Batch '${student.batchYear.slice(-2)}` : "Student"}</span>
           </div>

@@ -10,7 +10,7 @@ import { interviewService } from '../../services/interviewService';
 import { atsService } from '../../services/atsService';
 import { supabase } from '../../lib/supabaseClient';
 
-const Sidebar = ({ collapsed, setCollapsed }) => {
+const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) => {
   const [student, setStudent] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [counts, setCounts] = useState({
@@ -60,9 +60,9 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
   }, []);
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-header" style={{ height: '80px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', flexShrink: 0 }}>
-        <NavLink to="/" className="logo-wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', textDecoration: 'none', flex: 1, minWidth: 0 }}>
+        <NavLink to="/" className="logo-wrap" style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', textDecoration: 'none', flex: 1, minWidth: 0 }} onClick={onMobileClose}>
           <div style={{
             width: '40px',
             height: '40px',
@@ -105,14 +105,14 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <p className="nav-section-label">Core Track</p>
         <ul>
           <li className="nav-item">
-            <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><LayoutDashboard size={18} /></span>
               <span className="nav-label">Dashboard</span>
               <span className="nav-badge active-dot"></span>
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/readiness" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/readiness" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><Gauge size={18} /></span>
               <span className="nav-label">Career Readiness</span>
               {metrics?.hasRecordedSkills ? (
@@ -123,32 +123,32 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/assessments" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/assessments" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><ClipboardCheck size={18} /></span>
               <span className="nav-label">Assessments</span>
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/improvement" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/improvement" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><Compass size={18} /></span>
               <span className="nav-label">Improvement Path</span>
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/simulations" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/simulations" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><Cpu size={18} /></span>
               <span className="nav-label">Practice & Simulations</span>
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/classes" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/classes" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><Tv size={18} /></span>
               <span className="nav-label">Classes</span>
               {counts.classes > 0 && <span className="nav-count new">{counts.classes}</span>}
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/modules" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/modules" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><BookOpen size={18} /></span>
               <span className="nav-label">Study Modules</span>
               {counts.modules > 0 && <span className="nav-count">{counts.modules}</span>}
@@ -159,21 +159,21 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <p className="nav-section-label">Tools & Drives</p>
         <ul>
           <li className="nav-item">
-            <NavLink to="/resume" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/resume" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><FileBadge size={18} /></span>
               <span className="nav-label">Resume Maker & Analyzer</span>
               {counts.atsScore !== null && <span className="nav-count new">ATS {counts.atsScore}%</span>}
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/opportunities" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/opportunities" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><Briefcase size={18} /></span>
               <span className="nav-label">Opportunities / Drives</span>
               {counts.opportunities > 0 && <span className="nav-count">{counts.opportunities}</span>}
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/interviews" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/interviews" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><Video size={18} /></span>
               <span className="nav-label">Interviews</span>
               {counts.interviews > 0 && <span className="nav-count new">{counts.interviews}</span>}
@@ -184,7 +184,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <p className="nav-section-label">Account</p>
         <ul>
           <li className="nav-item">
-            <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
               <span className="nav-icon"><UserCog size={18} /></span>
               <span className="nav-label">Profile & Settings</span>
             </NavLink>
@@ -197,7 +197,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           <Award size={14} />
           <span>Readiness: {metrics?.hasRecordedSkills ? `${metrics.overallScore}/100` : '— / 100'}</span>
         </div>
-        <NavLink to="/profile" className="logout-btn">
+        <NavLink to="/profile" className="logout-btn" onClick={onMobileClose}>
           <LogOut size={16} />
           <span>Account Settings</span>
         </NavLink>
