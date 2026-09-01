@@ -80,7 +80,7 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
             <img 
               src="/placeduplogo.jpg" 
               alt="Placed Logo" 
-              onError={(e) => { e.target.src = '/placed-logo.png'; }}
+              loading="eager"
               style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
             />
           </div>
