@@ -81,7 +81,7 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
               src="/placeduplogo.jpg" 
               alt="Placed Logo" 
               loading="eager"
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'contain', colorScheme: 'light' }} 
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1, minWidth: 0 }}>
