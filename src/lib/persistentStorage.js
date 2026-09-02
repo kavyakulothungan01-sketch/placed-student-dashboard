@@ -9,7 +9,8 @@ export const persistentStorage = {
   async get(key, supabaseQuery, emptyDefault) {
     try {
       if (supabaseQuery) {
-        const { data, error } = await supabaseQuery();
+        const result = await supabaseQuery() || {};
+        const { data, error } = result;
         if (!error && data) {
           // Store actual database record in local persistent cache
           localStorage.setItem(`placed_user_db_${key}`, JSON.stringify(data));

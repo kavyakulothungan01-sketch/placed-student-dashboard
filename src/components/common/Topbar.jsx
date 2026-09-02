@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, Settings, X, ArrowRight, LayoutDashboard, Gauge, ClipboardCheck, Compass, Cpu, Tv, BookOpen, FileBadge, Briefcase, Video, UserCog, Menu } from 'lucide-react';
+import { Search, Bell, Settings, X, ArrowRight, LayoutDashboard, Gauge, ClipboardCheck, Compass, Cpu, Tv, BookOpen, FileBadge, Briefcase, Video, UserCog, Menu, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { studentService } from '../../services/studentService';
 import { opportunityService } from '../../services/opportunityService';
 import { classService } from '../../services/classService';
 import { studyModuleService } from '../../services/studyModuleService';
+import { handleAppLogout } from '../../utils/authUtils';
 
 const Topbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
@@ -268,6 +269,15 @@ const Topbar = ({ onMenuClick }) => {
             <span className="topbar-role">{student?.batchYear ? `Batch '${student.batchYear.slice(-2)}` : "Student"}</span>
           </div>
         </div>
+        <button 
+          className="topbar-logout-btn" 
+          onClick={handleAppLogout} 
+          aria-label="Log Out" 
+          title="Log Out"
+        >
+          <LogOut size={14} />
+          <span>Log Out</span>
+        </button>
       </div>
 
     </header>
