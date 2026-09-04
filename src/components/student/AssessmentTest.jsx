@@ -9,12 +9,19 @@ import {
   AlertTriangle, 
   Award
 } from 'lucide-react';
-import { assessmentService } from '../../services/assessmentService';
+import { assessmentService, selectRandomQuestions } from '../../services/assessmentService';
 import './AssessmentTest.css';
 
-const DURATION_SECONDS = 30 * 60; // 30 minutes
+const AssessmentTest = ({ 
+  assessmentId = 'aptitude-diagnostic-01', 
+  questionCount = 20, 
+  durationMinutes = 30,
+  assessmentTitle = 'Aptitude Diagnostic Test',
+  assessmentDescription = 'Standardized benchmark assessment evaluating Quantitative Aptitude, Logical Reasoning, and Problem-Solving agility.',
+  onBack 
+}) => {
+  const durationSeconds = durationMinutes * 60;
 
-const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => {
   // Navigation & view states: 'instructions' | 'loading' | 'testing' | 'submitting' | 'results' | 'error'
   const [viewState, setViewState] = useState('instructions');
   const [errorMessage, setErrorMessage] = useState('');
@@ -23,11 +30,11 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
   const [questions, setQuestions] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({}); // { [question_id]: 'A' | 'B' | 'C' | 'D' }
-  const [attemptRecord, setAttemptRecord] = useState(null);
+  const [_attemptRecord, setAttemptRecord] = useState(null); // reserved for future auth-integration
   const [resultsData, setResultsData] = useState(null);
 
   // Timer state
-  const [timeLeft, setTimeLeft] = useState(DURATION_SECONDS);
+  const [timeLeft, setTimeLeft] = useState(durationSeconds);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const timerRef = useRef(null);
 
@@ -55,9 +62,50 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
     return s === c || c === `OPTION_${s}`;
   };
 
-  // Submit test calculation and persistence
-  const handleSubmitTest = useCallback(async () => {
-    // Prevent double submissions
+  // ── Shared local score calculator ──────────────────────────────────────
+  // Used by both manual Submit and timer auto-submit so results are always
+  // identical. No Supabase writes — pure in-memory computation.
+  // TODO(auth-integration): after auth is wired in, call
+  //   assessmentService.saveAssessmentAnswers() and
+  //   assessmentService.completeAssessmentAttempt() here.
+  const computeResults = useCallback((qs, answers) => {
+    let marksObtained = 0;
+    let totalMarks = 0;
+    let correctCount = 0;
+    let answeredCount = 0;
+
+    qs.forEach((q) => {
+      const qMarks = Number(q.marks) || 1;
+      totalMarks += qMarks;
+      const selected = answers[q.id] || null;
+      if (selected) answeredCount += 1;
+      const isCorrect = checkIsCorrect(selected, q.correct_answer);
+      if (isCorrect) {
+        correctCount += 1;
+        marksObtained += qMarks;
+      }
+    });
+
+    const unansweredCount = qs.length - answeredCount;
+    const incorrectCount = answeredCount - correctCount;
+    const percentage = totalMarks > 0 ? Math.round((marksObtained / totalMarks) * 100) : 0;
+
+    return {
+      score: marksObtained,
+      totalMarks,
+      percentage,
+      correctCount,
+      incorrectCount,
+      unansweredCount,
+      answeredCount,
+      questions: qs,
+      answers,
+    };
+  }, []);
+
+  // ── Submit handler (manual button + timer auto-submit) ──────────────────
+  const handleSubmitTest = useCallback(() => {
+    // Stop timer regardless of how submit was triggered
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -65,68 +113,28 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
     setShowSubmitModal(false);
     setViewState('submitting');
 
-    try {
-      if (!attemptRecord?.id) {
-        throw new Error('Missing active attempt session.');
-      }
+    setTimeout(() => {
+      try {
+        const results = computeResults(questions, selectedAnswers);
 
-      let score = 0;
-      const totalMarks = 20;
-      const answersPayload = [];
-
-      questions.forEach((q) => {
-        const selected = selectedAnswers[q.id] || null;
-        const isCorrect = checkIsCorrect(selected, q.correct_answer);
-        const marksAwarded = isCorrect ? (Number(q.marks) || 1) : 0;
-        if (isCorrect) score += marksAwarded;
-
-        answersPayload.push({
-          attempt_id: attemptRecord.id,
-          question_id: q.id,
-          selected_answer: selected,
-          is_correct: isCorrect,
-          marks_awarded: marksAwarded,
-          answered_at: new Date().toISOString()
+        console.log('[AssessmentTest] Local results computed:', {
+          score: results.score,
+          totalMarks: results.totalMarks,
+          percentage: results.percentage,
+          correct: results.correctCount,
+          incorrect: results.incorrectCount,
+          unanswered: results.unansweredCount,
         });
-      });
 
-      const percentage = Math.round((score / totalMarks) * 100);
-
-      // 1. Save answers
-      await assessmentService.saveAssessmentAnswers(answersPayload);
-
-      // 2. Complete attempt record
-      const completedAttempt = await assessmentService.completeAssessmentAttempt(attemptRecord.id, {
-        score,
-        totalMarks,
-        percentage
-      });
-
-      // 3. Prepare review stats
-      const correctCount = answersPayload.filter(a => a.is_correct).length;
-      const answeredCount = answersPayload.filter(a => a.selected_answer !== null).length;
-      const unansweredCount = questions.length - answeredCount;
-      const incorrectCount = answeredCount - correctCount;
-
-      setResultsData({
-        attempt: completedAttempt,
-        score,
-        totalMarks,
-        percentage,
-        correctCount,
-        incorrectCount,
-        unansweredCount,
-        questions,
-        answers: selectedAnswers
-      });
-
-      setViewState('results');
-    } catch (err) {
-      console.error('Error submitting assessment:', err);
-      setErrorMessage(err.message || 'Failed to submit assessment. Please check your connection.');
-      setViewState('error');
-    }
-  }, [attemptRecord, questions, selectedAnswers]);
+        setResultsData(results);
+        setViewState('results');
+      } catch (err) {
+        console.error('[AssessmentTest] Error computing results:', err);
+        setErrorMessage(err.message || 'Failed to calculate results. Please try again.');
+        setViewState('error');
+      }
+    }, 300);
+  }, [questions, selectedAnswers, computeResults]);
 
   // Handle countdown timer ticking
   useEffect(() => {
@@ -156,24 +164,39 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
     setViewState('loading');
     setErrorMessage('');
 
+    console.log('[AssessmentTest] handleStartTest — assessmentId:', assessmentId, '| required questionCount:', questionCount);
+
     try {
-      // 1. Fetch questions for assessment
-      const questionsData = await assessmentService.getAssessmentQuestions(assessmentId);
-      if (!questionsData || questionsData.length === 0) {
-        throw new Error('No questions found for this assessment in the database.');
+      // Local assessment mode — no attempt DB write until auth is integrated
+      const attempt = null;
+
+      // 1. Fetch the full question bank for this assessment from Supabase
+      const bank = await assessmentService.getAssessmentQuestions(assessmentId);
+
+      if (!bank || bank.length === 0) {
+        throw new Error(
+          `No questions found for assessment '${assessmentId}' in Supabase (received 0 rows). ` +
+          `Check table name, assessment_id value, RLS policy, and Supabase project URL/anon key.`
+        );
       }
 
-      // 2. Create attempt in Supabase
-      const attempt = await assessmentService.createAssessmentAttempt(assessmentId, 20);
+      // 2. Randomly select the required number of questions (Fisher-Yates shuffle)
+      //    - bank.length > questionCount → pick questionCount unique questions
+      //    - bank.length <= questionCount → use all, still shuffled
+      const selected = selectRandomQuestions(bank, questionCount);
 
-      setQuestions(questionsData);
-      setAttemptRecord(attempt);
-      setTimeLeft(DURATION_SECONDS);
+      console.log('[AssessmentTest] Question bank:', bank.length, '| Selected for this attempt:', selected.length);
+      console.log('[AssessmentTest] First question:', selected[0]?.question_text?.slice(0, 60));
+      console.log('[AssessmentTest] Last question: ', selected[selected.length - 1]?.question_text?.slice(0, 60));
+
+      setQuestions(selected);
+      setAttemptRecord(attempt); // null for this diagnostic pass
+      setTimeLeft(durationSeconds);
       setCurrentIdx(0);
       setSelectedAnswers({});
       setViewState('testing');
     } catch (err) {
-      console.error('Failed to start assessment:', err);
+      console.error('[AssessmentTest] Failed to start assessment:', err);
       setErrorMessage(err.message || 'An error occurred while preparing your test. Please try again.');
       setViewState('error');
     }
@@ -208,7 +231,7 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
           <div className="card" style={{ padding: '40px', textAlign: 'center', maxWidth: '420px', width: '100%' }}>
             <Clock size={36} color="var(--primary)" style={{ animation: 'spin 2s linear infinite', marginBottom: '16px' }} />
             <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '8px' }}>
-              {viewState === 'submitting' ? 'Submitting Assessment...' : 'Preparing Aptitude Diagnostic Test...'}
+              {viewState === 'submitting' ? 'Submitting Assessment...' : `Preparing ${assessmentTitle}...`}
             </h3>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
               {viewState === 'submitting' 
@@ -260,25 +283,25 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
                 <span className="sim-badge">DIAGNOSTIC TEST</span>
               </div>
               <h1 className="instructions-title">
-                <ClipboardCheck size={26} color="var(--primary)" /> Aptitude Diagnostic Test
+                <ClipboardCheck size={26} color="var(--primary)" /> {assessmentTitle}
               </h1>
               <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px' }}>
-                Standardized benchmark assessment evaluating Quantitative Aptitude, Logical Reasoning, and Problem-Solving agility.
+                {assessmentDescription}
               </p>
             </div>
 
             <div className="instructions-meta-grid">
               <div className="instructions-meta-box">
                 <span className="instructions-meta-label">Total Questions</span>
-                <span className="instructions-meta-value">20 Questions</span>
+                <span className="instructions-meta-value">{questionCount} Questions</span>
               </div>
               <div className="instructions-meta-box">
                 <span className="instructions-meta-label">Allocated Time</span>
-                <span className="instructions-meta-value">30 Minutes</span>
+                <span className="instructions-meta-value">{durationMinutes} Minutes</span>
               </div>
               <div className="instructions-meta-box">
                 <span className="instructions-meta-label">Total Marks</span>
-                <span className="instructions-meta-value">20 Marks (1 per question)</span>
+                <span className="instructions-meta-value">{questionCount} Marks (1 per question)</span>
               </div>
             </div>
 
@@ -336,7 +359,7 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
               <div style={{ fontSize: '13px', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.9 }}>
                 Assessment Completed
               </div>
-              <h2 style={{ fontSize: '24px', fontWeight: '800' }}>Aptitude Diagnostic Test</h2>
+              <h2 style={{ fontSize: '24px', fontWeight: '800' }}>{assessmentTitle}</h2>
               <div className="results-score-highlight">
                 {resultsData.score} / {resultsData.totalMarks}
               </div>
@@ -453,7 +476,7 @@ const AssessmentTest = ({ assessmentId = 'aptitude-diagnostic-01', onBack }) => 
         {/* Top Status Bar */}
         <div className="test-topbar">
           <div className="test-title-area">
-            <span className="test-title">Aptitude Diagnostic Test</span>
+            <span className="test-title">{assessmentTitle}</span>
             <span className="test-progress-tag">
               Question {currentIdx + 1} of {questions.length}
             </span>
