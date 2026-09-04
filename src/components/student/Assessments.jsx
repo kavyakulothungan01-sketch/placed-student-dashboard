@@ -6,7 +6,16 @@ const Assessments = () => {
   const [assessments, setAssessments] = useState([]);
 
   useEffect(() => {
-    assessmentService.getAssessments().then(setAssessments);
+    assessmentService
+      .getAssessments()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setAssessments(data);
+        }
+      })
+      .catch((err) => {
+        console.error('Error loading assessments:', err);
+      });
   }, []);
 
   return (
