@@ -3,6 +3,14 @@ import { ClipboardCheck, Clock, ArrowRight, AlertCircle, RotateCcw } from 'lucid
 import { assessmentService } from '../../services/assessmentService';
 import AssessmentTest from './AssessmentTest';
 
+// List of assessment IDs with available question banks in assessment_questions
+const ACTIVE_ASSESSMENT_IDS = [
+  'aptitude-diagnostic-01',
+  'logical-reasoning-01',
+  'programming-fundamentals-01',
+  'cs-core-01'
+];
+
 const Assessments = () => {
   const [assessments, setAssessments] = useState([]);
   const [activeAssessmentId, setActiveAssessmentId] = useState(null);
@@ -16,13 +24,15 @@ const Assessments = () => {
         setAssessments(data);
       }
 
-      // Fetch student's latest completed attempt for aptitude-diagnostic-01
-      const latestAttempt = await assessmentService.getLatestAssessmentAttempt('aptitude-diagnostic-01');
-      if (latestAttempt) {
-        setCompletedAttempts((prev) => ({
-          ...prev,
-          'aptitude-diagnostic-01': latestAttempt
-        }));
+      // Fetch student's latest completed attempts for active assessments
+      for (const id of ACTIVE_ASSESSMENT_IDS) {
+        const latestAttempt = await assessmentService.getLatestAssessmentAttempt(id);
+        if (latestAttempt) {
+          setCompletedAttempts((prev) => ({
+            ...prev,
+            [id]: latestAttempt
+          }));
+        }
       }
     } catch (err) {
       console.error('Error loading assessments:', err);
@@ -34,7 +44,7 @@ const Assessments = () => {
   }, [loadAssessments]);
 
   const handleAssessmentClick = (ass) => {
-    if (ass.id === 'aptitude-diagnostic-01') {
+    if (ass.isActive && ACTIVE_ASSESSMENT_IDS.includes(ass.id)) {
       setActiveAssessmentId(ass.id);
       setNoticeMessage('');
     } else {
@@ -45,11 +55,19 @@ const Assessments = () => {
     }
   };
 
-  // If a test is active, render the assessment runner
   if (activeAssessmentId) {
+    // Find the active assessment record to read questionCount, duration, and title from the DB
+    const activeAss = assessments.find((a) => a.id === activeAssessmentId);
+    const requiredCount = parseInt(activeAss?.questionCount, 10) || 20;
+    const durationMinutes = parseInt(activeAss?.duration, 10) || 30;
+
     return (
       <AssessmentTest
         assessmentId={activeAssessmentId}
+        questionCount={requiredCount}
+        durationMinutes={durationMinutes}
+        assessmentTitle={activeAss?.title}
+        assessmentDescription={activeAss?.description}
         onBack={() => {
           setActiveAssessmentId(null);
           loadAssessments();

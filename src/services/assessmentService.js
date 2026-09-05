@@ -2,9 +2,40 @@ import { supabase } from '../lib/supabaseClient';
 import { persistentStorage } from '../lib/persistentStorage';
 
 /**
+ * Randomly selects `count` questions from `bank` using a Fisher-Yates shuffle.
+ *
+ * Rules:
+ *  - If bank.length > count  → pick `count` unique questions in random order.
+ *  - If bank.length <= count → use all questions in random order (no duplicates possible).
+ *  - Original array is never mutated (works on a shallow copy).
+ *  - Question IDs, correct_answer, marks, explanation are all preserved as-is.
+ *
+ * @param {Array}  bank  Full question bank from Supabase.
+ * @param {number} count Required number of questions for this test attempt.
+ * @returns {Array}      Selected questions in randomised order.
+ */
+export function selectRandomQuestions(bank, count) {
+  if (!Array.isArray(bank) || bank.length === 0) return [];
+
+  // Shallow copy so we never mutate the original Supabase response
+  const pool = [...bank];
+  const take = Math.min(count, pool.length);
+
+  // Fisher-Yates in-place shuffle on the copy
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
+  // Return the first `take` items — already in random order
+  return pool.slice(0, take);
+}
+
+/**
  * Diagnostic Assessments & Benchmark Tests Service
  */
 export const assessmentService = {
+
   /**
    * Fetch all diagnostic assessments.
    */
@@ -35,14 +66,29 @@ export const assessmentService = {
    * Fetch all questions for an assessment from Supabase, ordered by question_order.
    */
   async getAssessmentQuestions(assessmentId) {
-    const { data, error } = await supabase
+    console.log('[assessmentService] Fetching questions for assessmentId:', assessmentId);
+    console.log('[assessmentService] Query: supabase.from("assessment_questions").select("*").eq("assessment_id", "' + assessmentId + '").order("question_order", { ascending: true })');
+
+    const response = await supabase
       .from('assessment_questions')
-      .select('*')
+      .select('*', { count: 'exact' })
       .eq('assessment_id', assessmentId)
       .order('question_order', { ascending: true });
 
+    const { data, error, count, status, statusText } = response;
+
+    console.log('[assessmentService] Query Response:', {
+      assessmentId,
+      status,
+      statusText,
+      count,
+      dataLength: data?.length,
+      data,
+      error
+    });
+
     if (error) {
-      console.error(`Error fetching questions for ${assessmentId}:`, error);
+      console.error(`[assessmentService] Error fetching questions for ${assessmentId}:`, error);
       throw error;
     }
     return data || [];
