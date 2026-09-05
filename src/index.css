@@ -3278,3 +3278,23 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* =============================================
+   SIMULATION TEST UI ADDITIONS
+   ============================================= */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-animation {
+  animation: spin 1s linear infinite;
+}
+
+/* Hide question navigator panel on small screens */
+@media (max-width: 768px) {
+  .test-navigator-panel {
+    display: none !important;
+  }
+}
