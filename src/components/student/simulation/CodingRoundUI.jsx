@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Clock,
-  ChevronLeft,
-  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
   Play,
   Send,
   AlertTriangle,
@@ -35,6 +34,7 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
 
   const timerRef = useRef(null);
   const startTimeRef = useRef(null);
+  
   useEffect(() => {
     const loadCodingProblems = async () => {
       try {
@@ -111,86 +111,32 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
 
     return () => clearInterval(timerRef.current);
   }, [isLoading, error, problems.length]);
+  
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '80px 20px'
-        }}
-      >
-        <Loader
-          size={40}
-          className="spin-animation"
-          style={{
-            color: 'var(--primary-color)',
-            marginBottom: '16px'
-          }}
-        />
-
-        <p
-          style={{
-            fontSize: '16px',
-            color: 'var(--text-muted)'
-          }}
-        >
-          Loading coding problems...
-        </p>
+      <div className="test-wrapper" style={{ alignItems: 'center', justifyContent: 'center', minHeight: '350px' }}>
+        <div className="card" style={{ padding: '40px', textAlign: 'center', maxWidth: '420px', width: '100%' }}>
+          <Loader size={36} color="var(--primary)" style={{ animation: 'spin 2s linear infinite', marginBottom: '16px' }} />
+          <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '8px' }}>Loading coding problems...</h3>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '80px 20px',
-          textAlign: 'center'
-        }}
-      >
-        <AlertTriangle
-          size={48}
-          style={{
-            color: 'var(--danger-color)',
-            marginBottom: '16px'
-          }}
-        />
-
-        <p
-          style={{
-            fontSize: '16px',
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-            marginBottom: '8px'
-          }}
-        >
-          Unable to Load Coding Problems
-        </p>
-
-        <p
-          style={{
-            fontSize: '14px',
-            color: 'var(--text-muted)',
-            marginBottom: '24px',
-            maxWidth: '420px'
-          }}
-        >
-          {error}
-        </p>
-
-        <button
-          className="btn btn-outline"
-          onClick={onExit}
-        >
-          Return to Overview
-        </button>
+      <div className="test-wrapper">
+        <div className="test-error-box">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700' }}>
+            <AlertTriangle size={20} /> Unable to Load Coding Problems
+          </div>
+          <p style={{ fontSize: '13px', margin: 0 }}>{error}</p>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+            <button className="btn btn-outline btn-sm" onClick={onExit}>
+              <ArrowLeft size={14} /> Return to Overview
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -257,106 +203,95 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
     problems.length > 0 &&
     problems.every((_, index) => submitted[index]);
   const problem = problems[currentProblem];
-  const isTimeLow = timeRemaining < 120;
+  const isTimeLow = timeRemaining <= 300; // 5 min warning
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className="test-wrapper">
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px 24px',
-        backgroundColor: 'var(--surface-color)',
-        borderBottom: '1px solid var(--border-color)',
-        flexWrap: 'wrap',
-        gap: '12px'
-      }}>
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary-color)', textTransform: 'uppercase', letterSpacing: '1px' }}>PLACED • Campus Placement Simulation</div>
-          <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>Coding Round — Problem {currentProblem + 1} of {problems.length}</div>
+      <div className="test-topbar">
+        <div className="test-title-area">
+          <span className="test-title">Coding Round</span>
+          <span className="test-progress-tag">
+            Problem {currentProblem + 1} of {problems.length}
+          </span>
         </div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px 20px',
-          borderRadius: '8px',
-          backgroundColor: isTimeLow ? 'rgba(239, 68, 68, 0.1)' : 'var(--bg-color)',
-          border: `1px solid ${isTimeLow ? 'var(--danger-color)' : 'var(--border-color)'}`,
-          color: isTimeLow ? 'var(--danger-color)' : 'var(--text-primary)',
-          fontFamily: 'monospace',
-          fontSize: '20px',
-          fontWeight: 700
-        }}>
-          <Clock size={18} />
-          {formatTime(timeRemaining)}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {isTimeLow && (
+            <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#B45309', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <AlertTriangle size={14} /> 5 Minutes Remaining
+            </span>
+          )}
+          <div className={`test-timer ${isTimeLow ? 'timer-warning' : ''} ${timeRemaining <= 60 ? 'timer-danger' : ''}`}>
+            <Clock size={16} />
+            <span>{formatTime(timeRemaining)}</span>
+          </div>
         </div>
       </div>
 
       {/* Main Area - Split View */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', flexWrap: 'wrap' }}>
-        {/* Problem Description */}
-        <div style={{ flex: 1, minWidth: '320px', padding: '24px', overflowY: 'auto', borderRight: '1px solid var(--border-color)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>{problem.title}</h3>
-            <span style={{
-              fontSize: '11px',
-              fontWeight: 600,
-              padding: '3px 10px',
-              borderRadius: '20px',
-              backgroundColor: problem.difficulty === 'Easy' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-              color: problem.difficulty === 'Easy' ? 'var(--success-color)' : 'var(--warning-color)'
-            }}>
-              {problem.difficulty}
-            </span>
-            {submitted[currentProblem] && (
-              <span style={{ fontSize: '11px', fontWeight: 600, padding: '3px 10px', borderRadius: '20px', backgroundColor: 'rgba(34, 197, 94, 0.1)', color: 'var(--success-color)' }}>
-                ✓ Submitted
+        {/* Problem Description - Styled similarly to question-card */}
+        <div className="question-card" style={{ flex: 1, minWidth: '320px', margin: 0, borderRadius: 0, borderRight: '1px solid var(--border-light)', overflowY: 'auto' }}>
+          <div className="question-header" style={{ marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0 }}>{problem.title}</h3>
+            
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <span className="question-marks-badge" style={{ 
+                backgroundColor: problem.difficulty === 'Easy' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+                color: problem.difficulty === 'Easy' ? 'var(--success)' : '#B45309',
+                borderColor: 'transparent'
+              }}>
+                {problem.difficulty}
               </span>
-            )}
+              {submitted[currentProblem] && (
+                <span className="question-marks-badge" style={{ backgroundColor: '#DCFCE7', color: '#15803D', borderColor: 'transparent' }}>
+                  ✓ Submitted
+                </span>
+              )}
+            </div>
           </div>
 
-          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.7, whiteSpace: 'pre-wrap', marginBottom: '24px' }}>
+          <div className="question-text" style={{ whiteSpace: 'pre-wrap', marginBottom: '24px', fontSize: '14.5px' }}>
             {problem.description}
-          </p>
+          </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ backgroundColor: 'var(--bg-color)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+            <div style={{ backgroundColor: 'var(--bg)', padding: '16px', borderRadius: 'var(--radius)', border: '1px solid var(--border-light)' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Input Format</div>
-              <pre style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap' }}>{problem.inputFormat}</pre>
+              <pre style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{problem.inputFormat}</pre>
             </div>
-            <div style={{ backgroundColor: 'var(--bg-color)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+            <div style={{ backgroundColor: 'var(--bg)', padding: '16px', borderRadius: 'var(--radius)', border: '1px solid var(--border-light)' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Output Format</div>
-              <pre style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap' }}>{problem.outputFormat}</pre>
+              <pre style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{problem.outputFormat}</pre>
             </div>
-            <div style={{ backgroundColor: 'var(--bg-color)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+            <div style={{ backgroundColor: 'var(--bg)', padding: '16px', borderRadius: 'var(--radius)', border: '1px solid var(--border-light)' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Constraints</div>
-              <pre style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap' }}>{problem.constraints}</pre>
+              <pre style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>{problem.constraints}</pre>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div style={{ backgroundColor: 'var(--bg-color)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              <div style={{ backgroundColor: 'var(--bg)', padding: '16px', borderRadius: 'var(--radius)', border: '1px solid var(--border-light)' }}>
                 <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Sample Input</div>
-                <pre style={{ fontSize: '13px', color: 'var(--text-primary)', margin: 0, fontFamily: 'monospace' }}>{problem.sampleInput}</pre>
+                <pre style={{ fontSize: '13px', color: 'var(--text)', margin: 0, fontFamily: 'monospace' }}>{problem.sampleInput}</pre>
               </div>
-              <div style={{ backgroundColor: 'var(--bg-color)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              <div style={{ backgroundColor: 'var(--bg)', padding: '16px', borderRadius: 'var(--radius)', border: '1px solid var(--border-light)' }}>
                 <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Sample Output</div>
-                <pre style={{ fontSize: '13px', color: 'var(--text-primary)', margin: 0, fontFamily: 'monospace' }}>{problem.sampleOutput}</pre>
+                <pre style={{ fontSize: '13px', color: 'var(--text)', margin: 0, fontFamily: 'monospace' }}>{problem.sampleOutput}</pre>
               </div>
             </div>
           </div>
         </div>
 
         {/* Code Editor Area */}
-        <div style={{ flex: 1, minWidth: '320px', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-color)' }}>
+        <div style={{ flex: 1, minWidth: '320px', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg)' }}>
           {/* Language Selector */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
             padding: '12px 16px',
-            borderBottom: '1px solid var(--border-color)',
-            backgroundColor: 'var(--surface-color)',
+            borderBottom: '1px solid var(--border-light)',
+            backgroundColor: 'var(--bg-card)',
             flexWrap: 'wrap'
           }}>
             <Code size={16} style={{ color: 'var(--text-muted)' }} />
@@ -369,9 +304,9 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
                   borderRadius: '6px',
                   fontSize: '12px',
                   fontWeight: 600,
-                  border: `1px solid ${language === lang ? 'var(--primary-color)' : 'var(--border-color)'}`,
-                  backgroundColor: language === lang ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
-                  color: language === lang ? 'var(--primary-color)' : 'var(--text-muted)',
+                  border: `1px solid ${language === lang ? 'var(--primary)' : 'transparent'}`,
+                  backgroundColor: language === lang ? '#EFF6FF' : 'transparent',
+                  color: language === lang ? 'var(--primary)' : 'var(--text-muted)',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
                 }}
@@ -402,16 +337,7 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
           />
 
           {/* Action buttons */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '12px 16px',
-            borderTop: '1px solid var(--border-color)',
-            backgroundColor: 'var(--surface-color)',
-            flexWrap: 'wrap',
-            gap: '12px'
-          }}>
+          <div className="question-nav-bar" style={{ borderRadius: 0, borderTop: '1px solid var(--border-light)' }}>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 className="btn btn-outline"
@@ -423,7 +349,7 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
                   opacity: currentProblem === 0 ? 0.5 : 1
                 }}
               >
-                <ChevronLeft size={16} style={{ marginRight: '4px' }} />
+                <ArrowLeft size={14} />
                 Previous
               </button>
 
@@ -436,26 +362,25 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
                   )
                 }
                 style={{
-                  opacity:
-                    currentProblem === problems.length - 1
-                      ? 0.5
-                      : 1
+                  opacity: currentProblem === problems.length - 1 ? 0.5 : 1
                 }}
               >
                 Next
-                <ChevronRight size={16} style={{ marginLeft: '4px' }} />
+                <ArrowRight size={14} />
               </button>
             </div>
+            
             <div style={{ display: 'flex', gap: '8px' }}>
               <button className="btn btn-outline" onClick={() => alert('Code execution is not available in simulation mode.')}>
-                <Play size={16} style={{ marginRight: '4px' }} /> Run Code
+                <Play size={14} /> Run Code
               </button>
+              
               {!submitted[currentProblem] ? (
                 <button
                   className="btn btn-primary"
                   onClick={handleSubmitProblem}
                 >
-                  <Send size={16} style={{ marginRight: '4px' }} />
+                  <Send size={14} />
                   Submit Solution
                 </button>
               ) : allSubmitted ? (
@@ -466,37 +391,17 @@ const CodingRoundUI = ({ onComplete, onExit }) => {
                   Finish Coding Round
                 </button>
               ) : (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '13px',
-                      color: 'var(--success-color)',
-                      fontWeight: 600
-                    }}
-                  >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '13px', color: '#15803D', fontWeight: 600 }}>
                     ✓ Problem Submitted
                   </span>
-
                   <button
                     className="btn btn-primary"
-                    onClick={() =>
-                      setCurrentProblem((prev) =>
-                        Math.min(problems.length - 1, prev + 1)
-                      )
-                    }
+                    onClick={() => setCurrentProblem((prev) => Math.min(problems.length - 1, prev + 1))}
                     disabled={currentProblem === problems.length - 1}
                   >
                     Next Problem
-                    <ChevronRight
-                      size={16}
-                      style={{ marginLeft: '4px' }}
-                    />
+                    <ArrowRight size={14} />
                   </button>
                 </div>
               )}

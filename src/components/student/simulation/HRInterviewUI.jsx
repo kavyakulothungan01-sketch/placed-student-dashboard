@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Clock, ChevronLeft, ChevronRight, Send, Loader, AlertTriangle } from 'lucide-react';
+import { Clock, ArrowLeft, ArrowRight, Send, Loader, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { simulationService } from '../../../services/simulationService';
 
 
@@ -105,137 +105,80 @@ const HRInterviewUI = ({ onComplete, onExit }) => {
       unansweredCount: total - answeredCount
     });
   }, [answers, questions, onComplete]);
+
+  const answeredCount = Object.values(answers).filter(
+    (answer) => answer && answer.trim().length > 0
+  ).length;
+  const unansweredCount = questions.length - answeredCount;
+
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '80px 20px'
-        }}
-      >
-        <Loader
-          size={40}
-          className="spin-animation"
-          style={{
-            color: 'var(--primary-color)',
-            marginBottom: '16px'
-          }}
-        />
-
-        <p
-          style={{
-            fontSize: '16px',
-            color: 'var(--text-muted)'
-          }}
-        >
-          Loading HR interview questions...
-        </p>
+      <div className="test-wrapper" style={{ alignItems: 'center', justifyContent: 'center', minHeight: '350px' }}>
+        <div className="card" style={{ padding: '40px', textAlign: 'center', maxWidth: '420px', width: '100%' }}>
+          <Loader size={36} color="var(--primary)" style={{ animation: 'spin 2s linear infinite', marginBottom: '16px' }} />
+          <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '8px' }}>Loading HR interview questions...</h3>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '80px 20px'
-        }}
-      >
-        <AlertTriangle
-          size={48}
-          style={{
-            color: 'var(--danger-color)',
-            marginBottom: '16px'
-          }}
-        />
-
-        <p
-          style={{
-            fontSize: '16px',
-            color: 'var(--text-primary)',
-            fontWeight: 600,
-            marginBottom: '8px'
-          }}
-        >
-          Unable to Load Questions
-        </p>
-
-        <p
-          style={{
-            fontSize: '14px',
-            color: 'var(--text-muted)',
-            marginBottom: '24px',
-            textAlign: 'center',
-            maxWidth: '400px'
-          }}
-        >
-          {error}
-        </p>
-
-        <button
-          className="btn btn-outline"
-          onClick={onExit}
-        >
-          Return to Overview
-        </button>
+      <div className="test-wrapper">
+        <div className="test-error-box">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700' }}>
+            <AlertTriangle size={20} /> Unable to Load Questions
+          </div>
+          <p style={{ fontSize: '13px', margin: 0 }}>{error}</p>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+            <button className="btn btn-outline btn-sm" onClick={onExit}>
+              <ArrowLeft size={14} /> Return to Overview
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   const isLastQuestion = currentIndex === questions.length - 1;
-  const isTimeLow = timeRemaining < 60;
+  const isTimeLow = timeRemaining <= 300; // 5 mins
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <div className="test-wrapper">
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px 24px',
-        backgroundColor: 'var(--surface-color)',
-        borderBottom: '1px solid var(--border-color)',
-        flexWrap: 'wrap',
-        gap: '12px'
-      }}>
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary-color)', textTransform: 'uppercase', letterSpacing: '1px' }}>PLACED • Campus Placement Simulation</div>
-          <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>HR Interview — Question {currentIndex + 1} of {questions.length}</div>
+      <div className="test-topbar">
+        <div className="test-title-area">
+          <span className="test-title">HR Interview</span>
+          <span className="test-progress-tag">
+            Question {currentIndex + 1} of {questions.length}
+          </span>
         </div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px 20px',
-          borderRadius: '8px',
-          backgroundColor: isTimeLow ? 'rgba(239, 68, 68, 0.1)' : 'var(--bg-color)',
-          border: `1px solid ${isTimeLow ? 'var(--danger-color)' : 'var(--border-color)'}`,
-          color: isTimeLow ? 'var(--danger-color)' : 'var(--text-primary)',
-          fontFamily: 'monospace',
-          fontSize: '20px',
-          fontWeight: 700
-        }}>
-          <Clock size={18} />
-          {formatTime(timeRemaining)}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {isTimeLow && (
+            <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#B45309', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <AlertTriangle size={14} /> 5 Minutes Remaining
+            </span>
+          )}
+          <div className={`test-timer ${isTimeLow ? 'timer-warning' : ''} ${timeRemaining <= 60 ? 'timer-danger' : ''}`}>
+            <Clock size={16} />
+            <span>{formatTime(timeRemaining)}</span>
+          </div>
         </div>
       </div>
 
       {/* Main Area */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        <div style={{ flex: 1, padding: '32px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px' }}>
-            Question {currentIndex + 1} of {questions.length}
+      <div className="test-grid">
+        <div className="question-card" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="question-header">
+            <span className="question-num-badge">
+              Question {currentIndex + 1} of {questions.length}
+            </span>
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.5, marginBottom: '24px' }}>
+          
+          <div className="question-text" style={{ fontSize: '18px', fontWeight: 600, marginBottom: '24px' }}>
             {questions[currentIndex]?.question}
-          </h3>
+          </div>
 
           <textarea
             value={answers[currentIndex] || ''}
@@ -245,91 +188,81 @@ const HRInterviewUI = ({ onComplete, onExit }) => {
               flex: 1,
               minHeight: '250px',
               padding: '20px',
-              borderRadius: '10px',
-              border: '1.5px solid var(--border-color)',
-              backgroundColor: 'var(--surface-color)',
+              borderRadius: 'var(--radius)',
+              border: '1.5px solid var(--border-light)',
+              backgroundColor: 'var(--bg)',
               fontSize: '15px',
               lineHeight: 1.7,
-              color: 'var(--text-primary)',
+              color: 'var(--text)',
               resize: 'none',
               outline: 'none',
               fontFamily: 'inherit',
               transition: 'border-color 0.15s ease'
             }}
-            onFocus={(e) => e.target.style.borderColor = 'var(--primary-color)'}
-            onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
+            onFocus={(e) => e.target.style.borderColor = 'var(--primary)'}
+            onBlur={(e) => e.target.style.borderColor = 'var(--border-light)'}
           />
 
           {/* Navigation */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '24px', gap: '12px' }}>
+          <div className="question-nav-bar" style={{ marginTop: '24px' }}>
             <button
               className="btn btn-outline"
               disabled={currentIndex === 0}
               onClick={() => setCurrentIndex((i) => i - 1)}
               style={{ opacity: currentIndex === 0 ? 0.5 : 1 }}
             >
-              <ChevronLeft size={16} style={{ marginRight: '4px' }} /> Previous
+              <ArrowLeft size={14} /> Previous
             </button>
-            {isLastQuestion ? (
-              <button className="btn btn-primary" onClick={handleSubmit}>
-                <Send size={16} style={{ marginRight: '6px' }} /> Submit Interview
-              </button>
-            ) : (
-              <button className="btn btn-primary" onClick={() => setCurrentIndex((i) => i + 1)}>
-                Next <ChevronRight size={16} style={{ marginLeft: '4px' }} />
-              </button>
-            )}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {isLastQuestion ? (
+                <button className="btn btn-primary" onClick={handleSubmit}>
+                  Submit Interview <CheckCircle2 size={14} />
+                </button>
+              ) : (
+                <button className="btn btn-primary" onClick={() => setCurrentIndex((i) => i + 1)}>
+                  Next <ArrowRight size={14} />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Question Navigator */}
-        <div className="test-navigator-panel" style={{
-          width: '200px',
-          borderLeft: '1px solid var(--border-color)',
-          padding: '20px 16px',
-          backgroundColor: 'var(--bg-color)',
-          flexShrink: 0
-        }}>
-          <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '12px' }}>Questions</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="navigator-card">
+          <h4 className="navigator-title">Questions</h4>
+
+          <div className="navigator-grid">
             {questions.map((_, i) => {
               const isAnswered = answers[i] && answers[i].trim().length > 0;
               const isCurrent = i === currentIndex;
-              let bgColor = 'var(--surface-color)';
-              let borderColor = 'var(--border-color)';
-              let textColor = 'var(--text-muted)';
-
-              if (isCurrent) {
-                bgColor = 'var(--primary-color)';
-                borderColor = 'var(--primary-color)';
-                textColor = 'white';
-              } else if (isAnswered) {
-                bgColor = 'var(--success-color)';
-                borderColor = 'var(--success-color)';
-                textColor = 'white';
-              }
-
+              
               return (
                 <button
                   key={i}
+                  type="button"
+                  className={`nav-item-btn ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
                   onClick={() => setCurrentIndex(i)}
-                  style={{
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: `1px solid ${borderColor}`,
-                    backgroundColor: bgColor,
-                    color: textColor,
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'all 0.15s ease'
-                  }}
+                  title={`Question ${i + 1}`}
                 >
-                  Q{i + 1}
+                  {i + 1}
                 </button>
               );
             })}
+          </div>
+
+          <div className="navigator-legend">
+            <div className="legend-item">
+              <span className="legend-dot answered"></span>
+              <span>Answered ({answeredCount})</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot unanswered"></span>
+              <span>Unanswered ({unansweredCount})</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot current"></span>
+              <span>Current Question</span>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Clock, ChevronLeft, ChevronRight, AlertTriangle, Loader } from 'lucide-react';
+import { Clock, ArrowRight, ArrowLeft, AlertTriangle, Loader, CheckCircle2 } from 'lucide-react';
 import { simulationService } from '../../../services/simulationService';
 import SubmitConfirmationModal from './SubmitConfirmationModal';
 
@@ -27,10 +27,8 @@ const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onC
         // 10 Quantitative + 10 Logical + 10 Verbal
         if (stage === 'aptitude') {
           data = await simulationService.getAptitudeQuestions();
-
         } else if (stage === 'technical') {
           data = await simulationService.getTechnicalQuestions();
-
         } else {
           data = await simulationService.getSimulationQuestions(
             stage,
@@ -39,9 +37,7 @@ const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onC
         }
 
         if (!data || data.length === 0) {
-          setError(
-            'No questions available for this stage. Please contact your administrator.'
-          );
+          setError('No questions available for this stage. Please contact your administrator.');
           return;
         }
 
@@ -55,10 +51,7 @@ const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onC
 
       } catch (error) {
         console.error('Failed to load questions:', error);
-
-        setError(
-          'Failed to load questions. Please check your connection and try again.'
-        );
+        setError('Failed to load questions. Please check your connection and try again.');
       } finally {
         setIsLoading(false);
       }
@@ -138,13 +131,16 @@ const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onC
   };
 
   const answeredCount = Object.keys(selectedAnswers).length;
+  const unansweredCount = questions.length - answeredCount;
 
   // Loading state
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
-        <Loader size={40} className="spin-animation" style={{ color: 'var(--primary-color)', marginBottom: '16px' }} />
-        <p style={{ fontSize: '16px', color: 'var(--text-muted)' }}>Loading {stageLabel} questions...</p>
+      <div className="test-wrapper" style={{ alignItems: 'center', justifyContent: 'center', minHeight: '350px' }}>
+        <div className="card" style={{ padding: '40px', textAlign: 'center', maxWidth: '420px', width: '100%' }}>
+          <Loader size={36} color="var(--primary)" style={{ animation: 'spin 2s linear infinite', marginBottom: '16px' }} />
+          <h3 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '8px' }}>Loading {stageLabel} questions...</h3>
+        </div>
       </div>
     );
   }
@@ -152,11 +148,18 @@ const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onC
   // Error state
   if (error) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
-        <AlertTriangle size={48} style={{ color: 'var(--danger-color)', marginBottom: '16px' }} />
-        <p style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 600, marginBottom: '8px' }}>Unable to Load Questions</p>
-        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '24px', textAlign: 'center', maxWidth: '400px' }}>{error}</p>
-        <button className="btn btn-outline" onClick={onExit}>Return to Overview</button>
+      <div className="test-wrapper">
+        <div className="test-error-box">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700' }}>
+            <AlertTriangle size={20} /> Unable to Load Questions
+          </div>
+          <p style={{ fontSize: '13px', margin: 0 }}>{error}</p>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+            <button className="btn btn-outline btn-sm" onClick={onExit}>
+              <ArrowLeft size={14} /> Return to Overview
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -164,214 +167,170 @@ const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onC
   // Empty state
   if (questions.length === 0) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 20px' }}>
-        <AlertTriangle size={48} style={{ color: 'var(--warning-color)', marginBottom: '16px' }} />
-        <p style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 600 }}>No questions available</p>
-        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '24px' }}>Questions for this stage haven't been added yet.</p>
-        <button className="btn btn-outline" onClick={onExit}>Return to Overview</button>
+      <div className="test-wrapper">
+        <div className="test-error-box" style={{ background: '#FEF3C7', borderColor: '#F59E0B', color: '#92400E' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700' }}>
+            <AlertTriangle size={20} /> No questions available
+          </div>
+          <p style={{ fontSize: '13px', margin: 0 }}>Questions for this stage haven't been added yet.</p>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+            <button className="btn btn-outline btn-sm" onClick={onExit}>
+              <ArrowLeft size={14} /> Return to Overview
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   const currentQuestion = questions[currentIndex];
+  const currentAnswer = selectedAnswers[currentQuestion.id] || null;
   const options = [
-    { key: 'A', text: currentQuestion.option_a },
-    { key: 'B', text: currentQuestion.option_b },
-    { key: 'C', text: currentQuestion.option_c },
-    { key: 'D', text: currentQuestion.option_d },
+    { letter: 'A', text: currentQuestion.option_a },
+    { letter: 'B', text: currentQuestion.option_b },
+    { letter: 'C', text: currentQuestion.option_c },
+    { letter: 'D', text: currentQuestion.option_d },
   ];
   const isLastQuestion = currentIndex === questions.length - 1;
-  const isTimeLow = timeRemaining < 60;
+  const is5MinWarning = timeRemaining <= 300;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      {/* Test Header Bar */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px 24px',
-        backgroundColor: 'var(--surface-color)',
-        borderBottom: '1px solid var(--border-color)',
-        flexWrap: 'wrap',
-        gap: '12px'
-      }}>
-        <div>
-          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary-color)', textTransform: 'uppercase', letterSpacing: '1px' }}>PLACED • Campus Placement Simulation</div>
-          <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>{stageLabel}</div>
+    <div className="test-wrapper">
+      {/* Top Status Bar */}
+      <div className="test-topbar">
+        <div className="test-title-area">
+          <span className="test-title">{stageLabel}</span>
+          <span className="test-progress-tag">
+            Question {currentIndex + 1} of {questions.length}
+          </span>
         </div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px 20px',
-          borderRadius: '8px',
-          backgroundColor: isTimeLow ? 'rgba(239, 68, 68, 0.1)' : 'var(--bg-color)',
-          border: `1px solid ${isTimeLow ? 'var(--danger-color)' : 'var(--border-color)'}`,
-          color: isTimeLow ? 'var(--danger-color)' : 'var(--text-primary)',
-          fontFamily: 'monospace',
-          fontSize: '20px',
-          fontWeight: 700
-        }}>
-          <Clock size={18} />
-          {formatTime(timeRemaining)}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {is5MinWarning && (
+            <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#B45309', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <AlertTriangle size={14} /> 5 Minutes Remaining
+            </span>
+          )}
+          <div className={`test-timer ${is5MinWarning ? 'timer-warning' : ''} ${timeRemaining <= 60 ? 'timer-danger' : ''}`}>
+            <Clock size={16} />
+            <span>{formatTime(timeRemaining)}</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Content: Question + Navigator side by side on desktop */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        {/* Question Area */}
-        <div style={{ flex: 1, padding: '28px', overflowY: 'auto' }}>
-          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '4px' }}>
-            Question {currentIndex + 1} of {questions.length}
-          </div>
-          {currentQuestion.category && (
-            <span style={{
-              display: 'inline-block',
-              fontSize: '11px',
-              fontWeight: 600,
-              color: 'var(--primary-color)',
-              backgroundColor: 'rgba(37, 99, 235, 0.08)',
-              padding: '3px 10px',
-              borderRadius: '20px',
-              marginBottom: '16px'
-            }}>
-              {currentQuestion.category}
+      {/* Test Grid: Question Card & Question Palette */}
+      <div className="test-grid">
+        {/* Main Question Card */}
+        <div className="question-card">
+          <div className="question-header">
+            <span className="question-num-badge">
+              Question {currentIndex + 1} of {questions.length}
             </span>
-          )}
-          <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.6, marginBottom: '24px' }}>
-            {currentQuestion.question}
-          </h3>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {options.map((opt) => {
-              const isSelected = selectedAnswers[currentQuestion.id] === opt.key;
-              return (
-                <button
-                  key={opt.key}
-                  onClick={() => handleSelectAnswer(currentQuestion.id, opt.key)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '14px',
-                    padding: '14px 18px',
-                    borderRadius: '10px',
-                    border: `1.5px solid ${isSelected ? 'var(--primary-color)' : 'var(--border-color)'}`,
-                    backgroundColor: isSelected ? 'rgba(37, 99, 235, 0.06)' : 'var(--surface-color)',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'all 0.15s ease',
-                    width: '100%',
-                    fontSize: '15px',
-                    color: 'var(--text-primary)'
-                  }}
-                >
-                  <span style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    flexShrink: 0,
-                    backgroundColor: isSelected ? 'var(--primary-color)' : 'var(--bg-color)',
-                    color: isSelected ? 'white' : 'var(--text-muted)',
-                    border: `1px solid ${isSelected ? 'var(--primary-color)' : 'var(--border-color)'}`
-                  }}>
-                    {opt.key}
-                  </span>
-                  <span>{opt.text}</span>
-                </button>
-              );
-            })}
+            {currentQuestion.category && (
+              <span className="question-marks-badge">
+                {currentQuestion.category}
+              </span>
+            )}
           </div>
 
-          {/* Navigation Buttons */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px', gap: '12px' }}>
+          <div className="question-text">
+            {currentQuestion.question}
+          </div>
+
+          {/* Options List */}
+          <div className="options-list">
+            {options.map(opt => (
+              <button
+                key={opt.letter}
+                type="button"
+                className={`option-button ${currentAnswer === opt.letter ? 'selected' : ''}`}
+                onClick={() => handleSelectAnswer(currentQuestion.id, opt.letter)}
+              >
+                <span className="option-letter">{opt.letter}</span>
+                <span>{opt.text}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Navigation Actions Bar */}
+          <div className="question-nav-bar">
             <button
+              type="button"
               className="btn btn-outline"
+              onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
               disabled={currentIndex === 0}
-              onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
               style={{ opacity: currentIndex === 0 ? 0.5 : 1 }}
             >
-              <ChevronLeft size={16} style={{ marginRight: '4px' }} /> Previous
+              <ArrowLeft size={14} /> Previous
             </button>
-            {isLastQuestion ? (
-              <button className="btn btn-primary" onClick={() => setShowSubmitModal(true)}>
-                Submit Test
-              </button>
-            ) : (
-              <button className="btn btn-primary" onClick={() => setCurrentIndex((i) => Math.min(questions.length - 1, i + 1))}>
-                Next <ChevronRight size={16} style={{ marginLeft: '4px' }} />
-              </button>
-            )}
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {isLastQuestion ? (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setShowSubmitModal(true)}
+                >
+                  Submit Test <CheckCircle2 size={14} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setCurrentIndex(prev => Math.min(questions.length - 1, prev + 1))}
+                >
+                  Next <ArrowRight size={14} />
+                </button>
+              )}
+              
+              {!isLastQuestion && (
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={() => setShowSubmitModal(true)}
+                >
+                  Submit Test
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Question Navigator Panel — hidden on small screens via media query class */}
-        <div className="test-navigator-panel" style={{
-          width: '220px',
-          borderLeft: '1px solid var(--border-color)',
-          padding: '20px 16px',
-          backgroundColor: 'var(--bg-color)',
-          overflowY: 'auto',
-          flexShrink: 0
-        }}>
-          <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '12px' }}>Question Navigator</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
-            {questions.map((q, i) => {
-              const isAnswered = !!selectedAnswers[q.id];
-              const isCurrent = i === currentIndex;
-              let bgColor = 'var(--surface-color)';
-              let borderColor = 'var(--border-color)';
-              let textColor = 'var(--text-muted)';
+        {/* Side Question Navigator */}
+        <div className="navigator-card">
+          <h4 className="navigator-title">Question Navigator</h4>
 
-              if (isCurrent) {
-                bgColor = 'var(--primary-color)';
-                borderColor = 'var(--primary-color)';
-                textColor = 'white';
-              } else if (isAnswered) {
-                bgColor = 'var(--success-color)';
-                borderColor = 'var(--success-color)';
-                textColor = 'white';
-              }
+          <div className="navigator-grid">
+            {questions.map((q, idx) => {
+              const isCurrent = idx === currentIndex;
+              const isAnswered = Boolean(selectedAnswers[q.id]);
 
               return (
                 <button
                   key={q.id}
-                  onClick={() => setCurrentIndex(i)}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '6px',
-                    border: `1px solid ${borderColor}`,
-                    backgroundColor: bgColor,
-                    color: textColor,
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.15s ease'
-                  }}
+                  type="button"
+                  className={`nav-item-btn ${isCurrent ? 'current' : ''} ${isAnswered ? 'answered' : 'unanswered'}`}
+                  onClick={() => setCurrentIndex(idx)}
+                  title={`Question ${idx + 1}`}
                 >
-                  {i + 1}
+                  {idx + 1}
                 </button>
               );
             })}
           </div>
-          <div style={{ marginTop: '20px', fontSize: '12px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--success-color)' }}></span> Answered
+
+          <div className="navigator-legend">
+            <div className="legend-item">
+              <span className="legend-dot answered"></span>
+              <span>Answered ({answeredCount})</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--primary-color)' }}></span> Current
+            <div className="legend-item">
+              <span className="legend-dot unanswered"></span>
+              <span>Unanswered ({unansweredCount})</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: 'var(--surface-color)', border: '1px solid var(--border-color)' }}></span> Not Answered
+            <div className="legend-item">
+              <span className="legend-dot current"></span>
+              <span>Current Question</span>
             </div>
           </div>
         </div>
