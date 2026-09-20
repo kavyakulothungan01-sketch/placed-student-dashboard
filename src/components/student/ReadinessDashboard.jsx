@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Gauge, RotateCw, Award, BarChart2, TrendingUp, Crosshair, AlertTriangle, Calculator, Brain, MessageSquare, Terminal, PlayCircle, CheckCircle, Compass, Edit2 } from 'lucide-react';
+import { Award, RotateCw, BarChart2, TrendingUp, Target, AlertTriangle, Calculator, Brain, MessageSquare, Terminal, PlayCircle, CheckCircle, Edit2 } from 'lucide-react';
 import { readinessService } from '../../services/readinessService';
 
 const ReadinessRingGauge = ({ score, activeTier, percentile }) => {
@@ -201,7 +201,7 @@ const ReadinessDashboard = () => {
     <main className="dashboard-content">
       <div className="view-header">
         <div>
-          <h1 className="view-title"><Gauge size={24} style={{ marginRight: '10px' }} /> Career Readiness Intelligence</h1>
+          <h1 className="view-title"><Award size={24} style={{ marginRight: '10px' }} /> Career Readiness Intelligence</h1>
           <p className="view-sub">Real-time assessment of placement preparedness, skill benchmarks, and role fitness derived from your active skill records.</p>
         </div>
         <button className="btn btn-primary" onClick={loadData}><RotateCw size={16} style={{ marginRight: '6px' }} /> Recalculate Metrics</button>
@@ -274,7 +274,7 @@ const ReadinessDashboard = () => {
           </section>
 
           <section className="card">
-            <div className="card-header"><h2 className="card-title"><Crosshair size={18} style={{ marginRight: '8px' }} /> Skill Weakness Radar</h2></div>
+            <div className="card-header"><h2 className="card-title"><Target size={18} style={{ marginRight: '8px' }} /> Skill Weakness Radar</h2></div>
             <div className="radar-chart-container" style={{ padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '240px' }}>
               <SkillWeaknessRadar data={skillScores} />
             </div>

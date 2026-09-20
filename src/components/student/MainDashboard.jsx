@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Gauge, FileBadge, Cpu, Award, TrendingUp, Calendar, ClipboardCheck, Minus, Send, BarChart2, ArrowRight, AlertOctagon, PlayCircle, Kanban, Edit3, Video, UserCheck, PlusCircle } from 'lucide-react';
+import { Award, FileText, TrendingUp, Calendar, ClipboardCheck, Minus, Briefcase, BarChart2, ArrowRight, PlayCircle, Columns3, Edit3, Video, User, PlusCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { studentService } from '../../services/studentService';
 import { readinessService } from '../../services/readinessService';
@@ -58,9 +58,9 @@ const MainDashboard = () => {
               : 'Record your skill scores in the Readiness Dashboard to compute your Placement Readiness Score.'}
           </p>
           <div className="welcome-actions">
-            <Link to="/readiness" className="btn btn-ghost"><Gauge size={16} style={{ marginRight: '6px' }} /> View Readiness Analysis</Link>
-            <Link to="/resume" className="btn btn-ghost"><FileBadge size={16} style={{ marginRight: '6px' }} /> Open Resume Maker</Link>
-            <Link to="/profile" className="btn btn-ghost"><UserCheck size={16} style={{ marginRight: '6px' }} /> Edit Profile</Link>
+            <Link to="/readiness" className="btn btn-ghost"><Award size={16} style={{ marginRight: '6px' }} /> View Readiness Analysis</Link>
+            <Link to="/resume" className="btn btn-ghost"><FileText size={16} style={{ marginRight: '6px' }} /> Open Resume Maker</Link>
+            <Link to="/profile" className="btn btn-ghost"><User size={16} style={{ marginRight: '6px' }} /> Edit Profile</Link>
           </div>
         </div>
 
@@ -99,7 +99,7 @@ const MainDashboard = () => {
       {/* KPI Grid */}
       <section className="kpi-grid">
         <Link to="/readiness" className="kpi-card" style={{ textDecoration: 'none' }}>
-          <div className="kpi-icon" style={{ background: 'rgba(37,99,235,0.1)', color: '#2563EB' }}><Award size={22} /></div>
+          <div className="kpi-icon" style={{ color: '#2563EB' }}><Award size={22} /></div>
           <div className="kpi-info">
             <p className="kpi-label">Placement Readiness Score</p>
             <h3 className="kpi-value">{metrics?.hasRecordedSkills ? `${metrics.overallScore} / 100` : '— / 100'}</h3>
@@ -109,7 +109,7 @@ const MainDashboard = () => {
         </Link>
 
         <Link to="/interviews" className="kpi-card" style={{ textDecoration: 'none' }}>
-          <div className="kpi-icon" style={{ background: 'rgba(139,92,246,0.1)', color: '#8B5CF6' }}><Video size={22} /></div>
+          <div className="kpi-icon" style={{ color: '#8B5CF6' }}><Video size={22} /></div>
           <div className="kpi-info">
             <p className="kpi-label">Interview Readiness</p>
             <h3 className="kpi-value">{metrics?.hasRecordedSkills ? `${metrics.interviewReadinessScore} / 100` : '— / 100'}</h3>
@@ -120,7 +120,7 @@ const MainDashboard = () => {
 
 
         <Link to="/modules" className="kpi-card" style={{ textDecoration: 'none' }}>
-          <div className="kpi-icon" style={{ background: 'rgba(245,158,11,0.1)', color: '#F59E0B' }}><ClipboardCheck size={22} /></div>
+          <div className="kpi-icon" style={{ color: '#F59E0B' }}><ClipboardCheck size={22} /></div>
           <div className="kpi-info">
             <p className="kpi-label">Skill Deficits Identified</p>
             <h3 className="kpi-value">{metrics?.deficitsLeft || 0} Gaps</h3>
@@ -130,7 +130,7 @@ const MainDashboard = () => {
         </Link>
 
         <Link to="/opportunities" className="kpi-card" style={{ textDecoration: 'none' }}>
-          <div className="kpi-icon" style={{ background: 'rgba(34,197,94,0.1)', color: '#22C55E' }}><Send size={22} /></div>
+          <div className="kpi-icon" style={{ color: '#22C55E' }}><Briefcase size={22} /></div>
           <div className="kpi-info">
             <p className="kpi-label">Applied Opportunities</p>
             <h3 className="kpi-value">{appliedOpps.length} Drives</h3>
@@ -164,7 +164,7 @@ const MainDashboard = () => {
 
           <section className="card">
             <div className="card-header">
-              <h2 className="card-title"><AlertOctagon size={18} style={{ marginRight: '8px' }} /> Top Skill Deficits & High-Impact Gaps</h2>
+              <h2 className="card-title"><ClipboardCheck size={18} style={{ marginRight: '8px' }} /> Top Skill Deficits & High-Impact Gaps</h2>
               <Link to="/readiness" className="card-link">View All Deficits <ArrowRight size={14} style={{ marginLeft: '4px' }} /></Link>
             </div>
             <div className="gaps-list">
@@ -191,7 +191,7 @@ const MainDashboard = () => {
 
           <section className="card">
             <div className="card-header">
-              <h2 className="card-title"><Kanban size={18} style={{ marginRight: '8px' }} /> Application Pipeline</h2>
+              <h2 className="card-title"><Columns3 size={18} style={{ marginRight: '8px' }} /> Application Pipeline</h2>
               <Link to="/opportunities" className="card-link">View All Drives <ArrowRight size={14} style={{ marginLeft: '4px' }} /></Link>
             </div>
             <div className="tracker-board">
@@ -228,7 +228,7 @@ const MainDashboard = () => {
         <div className="col-right">
           <section className="card resume-score-card">
             <div className="card-header">
-              <h2 className="card-title"><FileBadge size={18} style={{ marginRight: '8px' }} /> Resume Score</h2>
+              <h2 className="card-title"><FileText size={18} style={{ marginRight: '8px' }} /> Resume Score</h2>
               <Link to="/resume" className="card-link">Open Builder <ArrowRight size={14} style={{ marginLeft: '4px' }} /></Link>
             </div>
             <div className="resume-score-body">

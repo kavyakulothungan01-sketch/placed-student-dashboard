@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cpu, Clock, ArrowRight, RotateCcw } from 'lucide-react';
+import { MonitorPlay, Clock, ArrowRight, RotateCcw } from 'lucide-react';
 import GenericTestUI from './simulation/GenericTestUI';
 import CodingRoundUI from './simulation/CodingRoundUI';
 import HRInterviewUI from './simulation/HRInterviewUI';
@@ -167,7 +167,7 @@ const Simulations = () => {
       <div className="view-header">
         <div>
           <h1 className="view-title">
-            <Cpu size={24} style={{ marginRight: '10px' }} /> Practice & Simulations
+            <MonitorPlay size={24} style={{ marginRight: '10px' }} /> Practice & Simulations
           </h1>
           <p className="view-sub">Practice individual recruitment rounds independently at your own pace.</p>
         </div>

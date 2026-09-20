@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Compass, Map, Check, Loader, Play, Sparkles } from 'lucide-react';
+import { TrendingUp, Route, Check, Loader, Play, Sparkles } from 'lucide-react';
 import { improvementService } from '../../services/improvementService';
 
 const ImprovementPath = () => {
@@ -14,7 +14,7 @@ const ImprovementPath = () => {
       <div className="view-header">
         <div>
           <h1 className="view-title">
-            <Compass size={24} style={{ marginRight: '10px' }} /> Personalized Improvement Path
+            <TrendingUp size={24} style={{ marginRight: '10px' }} /> Personalized Improvement Path
           </h1>
           <p className="view-sub">Step-by-step development journey to eliminate skill deficits and boost your readiness index.</p>
         </div>
@@ -25,7 +25,7 @@ const ImprovementPath = () => {
           <section className="card">
             <div className="card-header">
               <h2 className="card-title">
-                <Map size={18} style={{ marginRight: '8px' }} /> Milestone Learning Path
+                <Route size={18} style={{ marginRight: '8px' }} /> Milestone Learning Path
               </h2>
             </div>
             <div className="roadmap-steps">

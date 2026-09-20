@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tv, Play, Clock, User, Calculator, Terminal, MessageSquare, Brain, Search, X, CheckCircle } from 'lucide-react';
+import { Users, Play, Clock, User, Calculator, Terminal, MessageSquare, Brain, Search, X, CheckCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { classService } from '../../services/classService';
 
@@ -69,7 +69,7 @@ const ClassesModule = () => {
       <div className="view-header">
         <div>
           <h1 className="view-title">
-            <Tv size={24} style={{ marginRight: '10px' }} /> Placement Video Classes Library
+            <Users size={24} style={{ marginRight: '10px' }} /> Placement Video Classes Library
           </h1>
           <p className="view-sub">Video lectures organized by placement subjects and key skill topics.</p>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Gauge, ClipboardCheck, Compass, Cpu, FileBadge, Briefcase, Video, UserCog, Award, LogOut, PanelLeftClose, PanelLeftOpen, Tv, BookOpen, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, Award, ClipboardCheck, TrendingUp, MonitorPlay, FileText, Briefcase, Video, User, LogOut, PanelLeftClose, PanelLeftOpen, Users, BookOpen, ArrowLeft } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { studentService } from '../../services/studentService';
 import { readinessService } from '../../services/readinessService';
@@ -123,7 +123,7 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
           </li>
           <li className="nav-item">
             <NavLink to="/readiness" title={collapsed ? "Career Readiness" : undefined} className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
-              <span className="nav-icon"><Gauge size={18} /></span>
+              <span className="nav-icon"><Award size={18} /></span>
               <span className="nav-label">Career Readiness</span>
               {metrics?.hasRecordedSkills ? (
                 <span className="nav-count new">{metrics.overallScore}%</span>
@@ -140,19 +140,19 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
           </li>
           <li className="nav-item">
             <NavLink to="/improvement" title={collapsed ? "Improvement Path" : undefined} className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
-              <span className="nav-icon"><Compass size={18} /></span>
+              <span className="nav-icon"><TrendingUp size={18} /></span>
               <span className="nav-label">Improvement Path</span>
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink to="/simulations" title={collapsed ? "Practice & Simulations" : undefined} className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
-              <span className="nav-icon"><Cpu size={18} /></span>
+              <span className="nav-icon"><MonitorPlay size={18} /></span>
               <span className="nav-label">Practice & Simulations</span>
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink to="/classes" title={collapsed ? "Classes" : undefined} className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
-              <span className="nav-icon"><Tv size={18} /></span>
+              <span className="nav-icon"><Users size={18} /></span>
               <span className="nav-label">Classes</span>
               {counts.classes > 0 && <span className="nav-count new">{counts.classes}</span>}
             </NavLink>
@@ -170,7 +170,7 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
         <ul>
           <li className="nav-item">
             <NavLink to="/resume" title={collapsed ? "Resume Maker & Analyzer" : undefined} className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
-              <span className="nav-icon"><FileBadge size={18} /></span>
+              <span className="nav-icon"><FileText size={18} /></span>
               <span className="nav-label">Resume Maker & Analyzer</span>
               {counts.atsScore !== null && <span className="nav-count new">ATS {counts.atsScore}%</span>}
             </NavLink>
@@ -195,7 +195,7 @@ const Sidebar = ({ collapsed, setCollapsed, mobileSidebarOpen, onMobileClose }) 
         <ul>
           <li className="nav-item">
             <NavLink to="/profile" title={collapsed ? "Profile & Settings" : undefined} className={({ isActive }) => (isActive ? 'active' : '')} onClick={onMobileClose}>
-              <span className="nav-icon"><UserCog size={18} /></span>
+              <span className="nav-icon"><User size={18} /></span>
               <span className="nav-label">Profile & Settings</span>
             </NavLink>
           </li>

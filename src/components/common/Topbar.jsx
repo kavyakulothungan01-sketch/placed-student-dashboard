@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, Settings, X, ArrowRight, LayoutDashboard, Gauge, ClipboardCheck, Compass, Cpu, Tv, BookOpen, FileBadge, Briefcase, Video, UserCog, Menu, LogOut } from 'lucide-react';
+import { Search, Bell, Settings, X, ArrowRight, LayoutDashboard, Award, ClipboardCheck, TrendingUp, MonitorPlay, Users, BookOpen, FileText, Briefcase, Video, User, Menu, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { studentService } from '../../services/studentService';
 import { opportunityService } from '../../services/opportunityService';
@@ -23,16 +23,16 @@ const Topbar = ({ onMenuClick }) => {
   // Static searchable pages index
   const PAGES = [
     { title: 'Dashboard Overview', path: '/', icon: <LayoutDashboard size={14} />, cat: 'Page' },
-    { title: 'Career Readiness Intelligence', path: '/readiness', icon: <Gauge size={14} />, cat: 'Page' },
+    { title: 'Career Readiness Intelligence', path: '/readiness', icon: <Award size={14} />, cat: 'Page' },
     { title: 'Assessments & Diagnostic Tests', path: '/assessments', icon: <ClipboardCheck size={14} />, cat: 'Page' },
-    { title: 'Personalized Improvement Path', path: '/improvement', icon: <Compass size={14} />, cat: 'Page' },
-    { title: 'Practice & Recruitment Simulations', path: '/simulations', icon: <Cpu size={14} />, cat: 'Page' },
-    { title: 'Placement Video Classes Library', path: '/classes', icon: <Tv size={14} />, cat: 'Page' },
+    { title: 'Personalized Improvement Path', path: '/improvement', icon: <TrendingUp size={14} />, cat: 'Page' },
+    { title: 'Practice & Recruitment Simulations', path: '/simulations', icon: <MonitorPlay size={14} />, cat: 'Page' },
+    { title: 'Placement Video Classes Library', path: '/classes', icon: <Users size={14} />, cat: 'Page' },
     { title: 'Structured Study Modules', path: '/modules', icon: <BookOpen size={14} />, cat: 'Page' },
-    { title: 'Resume Maker & ATS Analyzer', path: '/resume', icon: <FileBadge size={14} />, cat: 'Page' },
+    { title: 'Resume Maker & ATS Analyzer', path: '/resume', icon: <FileText size={14} />, cat: 'Page' },
     { title: 'Job Opportunities & Campus Drives', path: '/opportunities', icon: <Briefcase size={14} />, cat: 'Page' },
     { title: 'Scheduled Corporate Interviews', path: '/interviews', icon: <Video size={14} />, cat: 'Page' },
-    { title: 'Profile & Account Settings', path: '/profile', icon: <UserCog size={14} />, cat: 'Page' },
+    { title: 'Profile & Account Settings', path: '/profile', icon: <User size={14} />, cat: 'Page' },
   ];
 
   useEffect(() => {
@@ -217,7 +217,7 @@ const Topbar = ({ onMenuClick }) => {
                             <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>{cls.title}</p>
                             <span style={{ fontSize: '11px', color: '#64748B' }}>{cls.subjectName} • {cls.duration}</span>
                           </div>
-                          <Tv size={12} style={{ color: '#2563EB' }} />
+                          <Users size={12} style={{ color: '#2563EB' }} />
                         </div>
                       ))}
                     </div>

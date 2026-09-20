@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileBadge, Download, CheckCircle, Eye, User, FileText, Code, FolderGit2, GraduationCap, Briefcase, Plus, X, Sparkles, Cpu } from 'lucide-react';
+import { FileText, Download, CheckCircle, Eye, User, Code, FolderGit2, GraduationCap, Briefcase, Plus, X, Sparkles, ScanSearch } from 'lucide-react';
 import { resumeService } from '../../services/resumeService';
 import { atsService } from '../../services/atsService';
 
@@ -49,7 +49,7 @@ const ResumeBuilder = () => {
     <main className="dashboard-content">
       <div className="view-header">
         <div>
-          <h1 className="view-title"><FileBadge size={24} style={{ marginRight: '10px' }} /> Resume Maker & ATS Analyzer</h1>
+          <h1 className="view-title"><FileText size={24} style={{ marginRight: '10px' }} /> Resume Maker & ATS Analyzer</h1>
           <p className="view-sub">Build a professional, ATS-friendly resume and test it against real job descriptions.</p>
         </div>
         <button className="btn btn-primary" onClick={handlePrint}>
@@ -158,7 +158,7 @@ const ResumeBuilder = () => {
                 ></textarea>
               </div>
               <button className="btn btn-outline" onClick={runAtsAudit} style={{ alignSelf: 'flex-start' }}>
-                <Cpu size={16} style={{ marginRight: '6px' }} /> Run Compatibility Audit
+                <ScanSearch size={16} style={{ marginRight: '6px' }} /> Run Compatibility Audit
               </button>
               
               {atsResults && (

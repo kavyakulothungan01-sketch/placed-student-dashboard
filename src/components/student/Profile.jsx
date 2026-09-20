@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserCog, Save, User, Mail, Phone, Globe, AlertCircle, CheckCircle } from 'lucide-react';
+import { UserCircle, Save, User, Mail, Phone, Globe, AlertCircle, CheckCircle } from 'lucide-react';
 import { studentService } from '../../services/studentService';
 
 const Profile = () => {
@@ -54,7 +54,7 @@ const Profile = () => {
       <div className="view-header">
         <div>
           <h1 className="view-title">
-            <UserCog size={24} style={{ marginRight: '10px' }} /> Profile & Account Settings
+            <UserCircle size={24} style={{ marginRight: '10px' }} /> Profile & Account Settings
           </h1>
           <p className="view-sub">Manage your academic records, skills profile, and placement preferences.</p>
         </div>
