@@ -1,7 +1,8 @@
 import React from 'react';
 import { Award, ArrowLeft, ArrowRight } from 'lucide-react';
+import '../AssessmentTest.css';
 
-const TestResultUI = ({ title, results, onContinue }) => {
+const TestResultUI = ({ title, results, onContinue, continueLabel = "Continue to Next Stage", subtitle = "Stage Completed", onRetake }) => {
   const { score, total, percentage, timeTaken, correctCount, incorrectCount, unansweredCount } = results;
 
   let message = "";
@@ -22,7 +23,7 @@ const TestResultUI = ({ title, results, onContinue }) => {
         <div className="results-banner">
           <Award size={40} style={{ marginBottom: '4px' }} />
           <div style={{ fontSize: '13px', fontWeight: '700', letterSpacing: '0.5px', textTransform: 'uppercase', opacity: 0.9 }}>
-            Stage Completed
+            {subtitle}
           </div>
           <h2 style={{ fontSize: '24px', fontWeight: '800' }}>{title}</h2>
           <div className="results-score-highlight">
@@ -63,9 +64,14 @@ const TestResultUI = ({ title, results, onContinue }) => {
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+          {onRetake && (
+            <button className="btn btn-outline" onClick={onRetake}>
+              Retake Test
+            </button>
+          )}
           <button className="btn btn-primary" onClick={onContinue}>
-            Continue to Next Stage <ArrowRight size={14} style={{ marginLeft: '4px' }} />
+            {continueLabel} <ArrowRight size={14} style={{ marginLeft: '4px' }} />
           </button>
         </div>
       </div>

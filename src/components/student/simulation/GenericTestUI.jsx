@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Clock, ArrowRight, ArrowLeft, AlertTriangle, Loader, CheckCircle2 } from 'lucide-react';
 import { simulationService } from '../../../services/simulationService';
 import SubmitConfirmationModal from './SubmitConfirmationModal';
+import '../AssessmentTest.css';
 
 const GenericTestUI = ({ stage, stageLabel, questionCount, timeLimitMinutes, onComplete, onExit }) => {
   const [questions, setQuestions] = useState([]);

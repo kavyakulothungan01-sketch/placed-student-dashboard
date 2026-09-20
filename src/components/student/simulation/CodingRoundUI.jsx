@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import { simulationService } from '../../../services/simulationService';
+import '../AssessmentTest.css';
 
 const LANGUAGES = ['Python', 'Java', 'C', 'C++'];
 

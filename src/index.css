@@ -3,6 +3,8 @@
    Design System & Component Styles
    ============================================= */
 
+@import './components/student/AssessmentTest.css';
+
 /* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

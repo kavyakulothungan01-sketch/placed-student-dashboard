@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Clock, ArrowLeft, ArrowRight, Send, Loader, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { simulationService } from '../../../services/simulationService';
+import '../AssessmentTest.css';
 
 
 const HRInterviewUI = ({ onComplete, onExit }) => {
